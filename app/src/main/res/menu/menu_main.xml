@@ -1,0 +1,14 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.fduhole.danxinative.MainActivity">
+    <item
+        android:id="@+id/tab_home"
+        android:icon="@drawable/ic_baseline_dashboard_24"
+        android:title="@string/home" />
+    <item
+        android:id="@+id/tab_settings"
+        android:icon="@drawable/ic_baseline_settings_24"
+        android:title="@string/action_settings" />
+
+</menu>
