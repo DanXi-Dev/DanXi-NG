@@ -23,9 +23,9 @@ data class HomeUiState(
 )
 
 class HomeFragment : Fragment() {
-
     private val viewModel: HomeViewModel by viewModels()
     private lateinit var binding: FragmentHomeBinding
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -41,7 +41,7 @@ class HomeFragment : Fragment() {
 
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.map { it.features }.distinctUntilChanged().collect {
-                    binding.fragHomeFeatureList.adapter = context?.let { cxt -> FeatureAdapter(cxt, it) };
+                    binding.fragHomeFeatureList.adapter = context?.let { cxt -> FeatureAdapter(cxt, it) }
                 }
             }
         }
