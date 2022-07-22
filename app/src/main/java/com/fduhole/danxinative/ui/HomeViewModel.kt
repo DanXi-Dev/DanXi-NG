@@ -3,14 +3,16 @@ package com.fduhole.danxinative.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fduhole.danxinative.base.Feature
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
+import com.fduhole.danxinative.repository.fdu.ZLAppRepository
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-class HomeViewModel : ViewModel() {
+class HomeViewModel : ViewModel(), KoinComponent {
+    private val zlAppRepository: ZLAppRepository by inject()
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
@@ -28,7 +30,10 @@ class HomeViewModel : ViewModel() {
                 notifyRefresh()
 
                 loadingJob = featureScope.launch {
-                    delay(3000);
+                    withContext(Dispatchers.IO)
+                    {
+                        println(zlAppRepository.getHistoryInfo())
+                    }
                     subtitle = "今日已打卡"
                     progress = false
                     notifyRefresh()

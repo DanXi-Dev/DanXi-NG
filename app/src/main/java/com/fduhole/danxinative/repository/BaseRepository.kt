@@ -13,20 +13,32 @@ abstract class BaseRepository {
         val cookieJars: MutableMap<String, CookieJar> = mutableMapOf()
     }
 
-    val cookieJar: CookieJar
+    var cookieJar: CookieJar
         get() {
             if (!cookieJars.containsKey(getHost())) {
-                cookieJars[getHost()] = JavaNetCookieJar(CookieManager(null, CookiePolicy.ACCEPT_ALL))
+                cookieJar = JavaNetCookieJar(CookieManager(null, CookiePolicy.ACCEPT_ALL))
             }
             return cookieJars[getHost()]!!
         }
-    val client: OkHttpClient
+        set(value) {
+            cookieJars[getHost()] = value
+            client = clientFactory().build()
+        }
+
+    var client: OkHttpClient
         get() {
             if (!clients.containsKey(getHost())) {
-                clients[getHost()] = OkHttpClient.Builder().cookieJar(cookieJar).build()
+                client = clientFactory().build()
             }
             return clients[getHost()]!!
         }
+        set(value) {
+            clients[getHost()] = value
+        }
+
+    open fun clientFactory(): OkHttpClient.Builder {
+        return OkHttpClient.Builder().cookieJar(cookieJar).cache(null)
+    }
 
     abstract fun getHost(): String
 }

@@ -16,9 +16,12 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.fduhole.danxinative.databinding.ActivityMainBinding
+import com.fduhole.danxinative.model.PersonInfo
+import com.fduhole.danxinative.state.GlobalState
+import org.koin.android.ext.android.inject
 
 class MainActivity : AppCompatActivity() {
-
+    private val globalState: GlobalState by inject()
     private lateinit var appBarConfiguration: AppBarConfiguration
     private val binding: ActivityMainBinding by lazy {
         ActivityMainBinding.inflate(LayoutInflater.from(this))
