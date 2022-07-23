@@ -38,7 +38,7 @@ class HomeFragment : Fragment() {
         lifecycleScope.launch {
             viewModel.initModel { (binding.fragHomeFeatureList.adapter as BaseAdapter).notifyDataSetChanged() }
 
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.apply {
                     watch(this@repeatOnLifecycle, { it.features }) {
                         binding.fragHomeFeatureList.adapter = context?.let { cxt -> FeatureAdapter(cxt, it) }

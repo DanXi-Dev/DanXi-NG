@@ -51,7 +51,7 @@ class LoginFragment : Fragment() {
                     binding.fragLoginPasswordLayout.editText?.text.toString()
                 )
             }
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.apply {
                     val life = this@repeatOnLifecycle
                     watch(life, { it.idErrorText }) { binding.fragLoginIdLayout.error = it }
