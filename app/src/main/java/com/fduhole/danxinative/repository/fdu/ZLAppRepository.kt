@@ -1,6 +1,8 @@
 package com.fduhole.danxinative.repository.fdu
 
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withContext
 import okhttp3.Request
 import kotlin.coroutines.resume
 
@@ -14,8 +16,10 @@ class ZLAppRepository : BaseFDURepository() {
 
     override fun getHost(): String = "zlapp.fudan.edu.cn"
 
-    suspend fun getHistoryInfo(): String? = suspendCancellableCoroutine {
-        val res = client.newCall(Request.Builder().url(GET_INFO_URL).get().build()).execute()
-        it.resume(res.body?.string())
+    suspend fun getHistoryInfo(): String? = withContext(Dispatchers.IO) {
+        suspendCancellableCoroutine {
+            val res = client.newCall(Request.Builder().url(GET_INFO_URL).get().build()).execute()
+            it.resume(res.body?.string())
+        }
     }
 }

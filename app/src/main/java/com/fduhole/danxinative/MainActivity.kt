@@ -1,5 +1,6 @@
 package com.fduhole.danxinative
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import com.google.android.material.snackbar.Snackbar
@@ -23,9 +24,7 @@ import org.koin.android.ext.android.inject
 class MainActivity : AppCompatActivity() {
     private val globalState: GlobalState by inject()
     private lateinit var appBarConfiguration: AppBarConfiguration
-    private val binding: ActivityMainBinding by lazy {
-        ActivityMainBinding.inflate(LayoutInflater.from(this))
-    }
+    private val binding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(LayoutInflater.from(this)) }
     private val navController: NavController by lazy {
         val fragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_content_main) as NavHostFragment
         fragment.navController
@@ -38,8 +37,15 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.toolbar)
         binding.actMainBottomNavigation.setupWithNavController(navController)
+
+        jumpIfNotLogin()
     }
 
+    private fun jumpIfNotLogin() {
+        if (globalState.person == null) {
+            startActivity(Intent(this, LoginActivity::class.java))
+        }
+    }
 
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp(appBarConfiguration)

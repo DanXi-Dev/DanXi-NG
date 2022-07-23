@@ -14,8 +14,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.fduhole.danxinative.base.Feature
 import com.fduhole.danxinative.databinding.FragmentHomeBinding
 import com.fduhole.danxinative.databinding.ItemFeatureCardBinding
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
+import com.fduhole.danxinative.util.lifecycle.watch
 import kotlinx.coroutines.launch
 
 data class HomeUiState(
@@ -40,34 +39,36 @@ class HomeFragment : Fragment() {
             viewModel.initModel { (binding.fragHomeFeatureList.adapter as BaseAdapter).notifyDataSetChanged() }
 
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.map { it.features }.distinctUntilChanged().collect {
-                    binding.fragHomeFeatureList.adapter = context?.let { cxt -> FeatureAdapter(cxt, it) }
+                viewModel.uiState.apply {
+                    watch(this@repeatOnLifecycle, { it.features }) {
+                        binding.fragHomeFeatureList.adapter = context?.let { cxt -> FeatureAdapter(cxt, it) }
+                    }
                 }
             }
         }
     }
-}
 
-class FeatureAdapter(private val context: Context, private val features: List<Feature>) : BaseAdapter() {
-    override fun getCount(): Int = features.size
+    class FeatureAdapter(private val context: Context, private val features: List<Feature>) : BaseAdapter() {
+        override fun getCount(): Int = features.size
 
-    override fun getItem(position: Int): Any = features[position]
+        override fun getItem(position: Int): Any = features[position]
 
-    override fun getItemId(position: Int): Long = position.toLong()
+        override fun getItemId(position: Int): Long = position.toLong()
 
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        // If we do not reuse old views, the animation on the old view (i.e. tap ripple effect) will be discarded at once.
-        val item = if (convertView != null)
-            ItemFeatureCardBinding.bind(convertView)
-        else
-            ItemFeatureCardBinding.inflate(LayoutInflater.from(context), parent, false)
-        item.itFeatureCardCardView.isEnabled = features[position].getClickable()
-        item.itFeatureCardProgressBar.visibility = if (features[position].inProgress()) View.VISIBLE else View.INVISIBLE
-        item.itFeatureCardCardView.setOnClickListener { features[position].onClick() }
-        item.itFeatureCardTitle.text = features[position].getTitle()
-        item.itFeatureCardSubtitle.text = features[position].getSubTitle()
-        item.itFeatureCardTertiaryTitle.visibility = View.GONE
-        return item.root
+        override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+            // If we do not reuse old views, the animation on the old view (i.e. tap ripple effect) will be discarded at once.
+            val item = if (convertView != null)
+                ItemFeatureCardBinding.bind(convertView)
+            else
+                ItemFeatureCardBinding.inflate(LayoutInflater.from(context), parent, false)
+            item.itFeatureCardCardView.isEnabled = features[position].getClickable()
+            item.itFeatureCardProgressBar.visibility = if (features[position].inProgress()) View.VISIBLE else View.INVISIBLE
+            item.itFeatureCardCardView.setOnClickListener { features[position].onClick() }
+            item.itFeatureCardTitle.text = features[position].getTitle()
+            item.itFeatureCardSubtitle.text = features[position].getSubTitle()
+            item.itFeatureCardTertiaryTitle.visibility = View.GONE
+            return item.root
+        }
+
     }
-
 }

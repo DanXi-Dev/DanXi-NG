@@ -4,6 +4,7 @@ package com.fduhole.danxinative.state
 import android.content.Context
 import android.content.SharedPreferences
 import com.fduhole.danxinative.model.PersonInfo
+import com.fduhole.danxinative.repository.fdu.EhallRepository
 import com.fduhole.danxinative.repository.fdu.ZLAppRepository
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
@@ -14,6 +15,7 @@ val appModule = module {
     single<SharedPreferences> { get<Context>().getSharedPreferences("app_pref", Context.MODE_PRIVATE) }
     single { GlobalState(get()) }
     single { ZLAppRepository() }
+    single { EhallRepository() }
 }
 
 class GlobalState constructor(private val sp: SharedPreferences) {

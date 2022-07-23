@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">旦夕</string>
+    <string name="id">ID</string>
+    <string name="login_title">登录</string>
+    <string name="login_subtitle">使用学校身份信息登录旦夕</string>
 </resources>

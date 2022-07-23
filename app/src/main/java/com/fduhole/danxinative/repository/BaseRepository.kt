@@ -1,6 +1,6 @@
 package com.fduhole.danxinative.repository
 
-import okhttp3.CookieJar
+import com.fduhole.danxinative.util.net.MemoryCookieJar
 import okhttp3.JavaNetCookieJar
 import okhttp3.OkHttpClient
 import java.net.CookieManager
@@ -10,19 +10,15 @@ import java.net.CookiePolicy
 abstract class BaseRepository {
     companion object {
         val clients: MutableMap<String, OkHttpClient> = mutableMapOf()
-        val cookieJars: MutableMap<String, CookieJar> = mutableMapOf()
+        val cookieJars: MutableMap<String, MemoryCookieJar> = mutableMapOf()
     }
 
-    var cookieJar: CookieJar
+    val cookieJar: MemoryCookieJar
         get() {
             if (!cookieJars.containsKey(getHost())) {
-                cookieJar = JavaNetCookieJar(CookieManager(null, CookiePolicy.ACCEPT_ALL))
+                cookieJars[getHost()] = MemoryCookieJar(JavaNetCookieJar(CookieManager(null, CookiePolicy.ACCEPT_ALL)))
             }
             return cookieJars[getHost()]!!
-        }
-        set(value) {
-            cookieJars[getHost()] = value
-            client = clientFactory().build()
         }
 
     var client: OkHttpClient
@@ -38,6 +34,9 @@ abstract class BaseRepository {
 
     open fun clientFactory(): OkHttpClient.Builder {
         return OkHttpClient.Builder().cookieJar(cookieJar).cache(null)
+    }
+    open fun clientFactoryNoCookie(): OkHttpClient.Builder {
+        return OkHttpClient.Builder().cache(null)
     }
 
     abstract fun getHost(): String

@@ -4,17 +4,21 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fduhole.danxinative.base.Feature
 import com.fduhole.danxinative.repository.fdu.ZLAppRepository
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 class HomeViewModel : ViewModel(), KoinComponent {
-    private val zlAppRepository: ZLAppRepository by inject()
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
+
+    private val zlAppRepository: ZLAppRepository by inject()
 
     private suspend fun buildFeatures() {
         val demoFeature = object : Feature() {
