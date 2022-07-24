@@ -3,21 +3,14 @@ package com.fduhole.danxinative
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
-import android.view.Menu
-import android.view.MenuItem
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupWithNavController
 import com.fduhole.danxinative.databinding.ActivityMainBinding
-import com.fduhole.danxinative.model.PersonInfo
 import com.fduhole.danxinative.state.GlobalState
 import org.koin.android.ext.android.inject
 
@@ -34,7 +27,6 @@ class MainActivity : AppCompatActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-
         setSupportActionBar(binding.toolbar)
         binding.actMainBottomNavigation.setupWithNavController(navController)
 

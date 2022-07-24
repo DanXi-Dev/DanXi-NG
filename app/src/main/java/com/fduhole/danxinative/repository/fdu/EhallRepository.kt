@@ -27,10 +27,11 @@ class EhallRepository : BaseRepository() {
 
     suspend fun getStudentInfo(info: PersonInfo): StudentInfo = withContext(Dispatchers.IO) {
         suspendCancellableCoroutine {
-            // Execute manually logging in
+            // Execute manual logging in.
             val tmpMemoryCookieJar = MemoryCookieJar(JavaNetCookieJar(CookieManager(null, CookiePolicy.ACCEPT_ALL)))
             val tmpClient = clientFactoryNoCookie().cookieJar(tmpMemoryCookieJar).build()
-            tmpMemoryCookieJar.replace(UISAuthInterceptor.login(info.id, info.password, LOGIN_URL))
+            // Login and absorb the auth cookie.
+            tmpMemoryCookieJar.replaceBy(UISAuthInterceptor.login(info.id, info.password, LOGIN_URL))
 
             val response = tmpClient.newCall(Request.Builder().url(INFO_URL).get().build()).execute()
             val obj = JSONObject(response.body?.string() ?: "").getJSONObject("data")

@@ -11,14 +11,19 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.fduhole.danxinative.R
 import com.fduhole.danxinative.databinding.FragmentLoginBinding
+import com.fduhole.danxinative.util.ErrorUtils
 import com.fduhole.danxinative.util.lifecycle.watch
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 
 data class LoginUiState(
-    val idErrorText: String? = null,
-    val passwordErrorText: String? = null,
-    val loggingIn: Boolean = false
+    val idErrorId: Int? = null,
+    val passwordErrorId: Int? = null,
+    val loginError: Throwable? = null,
+    val loggingIn: Boolean = false,
+    val logged: Boolean = false
 )
 
 class LoginFragment : Fragment() {
@@ -46,20 +51,30 @@ class LoginFragment : Fragment() {
                 override fun afterTextChanged(s: Editable?) = viewModel.onPasswordChanged(s.toString())
             })
             binding.fragLoginLoginButton.setOnClickListener {
-                viewModel.onLogin(
-                    binding.fragLoginIdLayout.editText?.text.toString(),
-                    binding.fragLoginPasswordLayout.editText?.text.toString()
+                viewModel.logIn(
+                    binding.fragLoginIdLayout.editText?.text?.toString(),
+                    binding.fragLoginPasswordLayout.editText?.text?.toString()
                 )
             }
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.apply {
                     val life = this@repeatOnLifecycle
-                    watch(life, { it.idErrorText }) { binding.fragLoginIdLayout.error = it }
-                    watch(life, { it.passwordErrorText }) { binding.fragLoginPasswordLayout.error = it }
+                    watch(life, { it.idErrorId }) { binding.fragLoginIdLayout.error = it?.let { it1 -> getString(it1) } }
+                    watch(life, { it.passwordErrorId }) { binding.fragLoginPasswordLayout.error = it?.let { it1 -> getString(it1) } }
                     watch(life, { it.loggingIn }) {
                         binding.fragLoginLoginButton.apply {
-                            text = if (it) "登录中" else "登录"
+                            text = if (it) getString(R.string.logging_in) else getString(R.string.login_title)
                             isEnabled = !it
+                        }
+                    }
+                    watch(life, { it.loginError }) {
+                        if (it != null) {
+                            Snackbar.make(binding.root, ErrorUtils.describeError(this@LoginFragment, it), Snackbar.LENGTH_LONG).show()
+                        }
+                    }
+                    watch(life, { it.logged }) {
+                        if (it) {
+                            activity?.finish()
                         }
                     }
                 }

@@ -25,7 +25,14 @@ class GlobalState constructor(private val sp: SharedPreferences) {
     }
 
     var person: PersonInfo?
-        get() = if (sp.contains(KEY_PERSON_INFO))
-            Json.decodeFromString(sp.getString(KEY_PERSON_INFO, "")!!) else null
+        get() {
+            if (sp.contains(KEY_PERSON_INFO)) {
+                try {
+                    return Json.decodeFromString(sp.getString(KEY_PERSON_INFO, "")!!)
+                } catch (_: Exception) {
+                }
+            }
+            return null
+        }
         set(value) = sp.edit().putString(KEY_PERSON_INFO, Json.encodeToString(value)).apply()
 }
