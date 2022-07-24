@@ -51,17 +51,17 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="id">ID</string>
-    <string name="login_title">登录</string>
+    <string name="login_title">Login</string>
     <string name="title_activity_login">LoginActivity</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
-    <string name="login_subtitle">使用学校身份信息登录旦夕</string>
-    <string name="logging_in">登录中</string>
-    <string name="weak_password_note">服务器错误，认为您所输入的是弱密码。请重试数次，或修改密码后再登录。</string>
-    <string name="under_maintenance_note">网络错误，您尚未连接到复旦内网，无法执行登录。请开启校园 VPN 后重试。</string>
-    <string name="need_captcha_note">服务器错误，要求您输入验证码。请用手机浏览器打开 uis.fudan.edu.cn ，手动完成一次登录。</string>
-    <string name="invalid_credentials_note">ID 或密码不正确。请确认后再输入。</string>
-    <string name="id_non_empty">ID 不能为空</string>
-    <string name="password_non_empty">密码不能为空</string>
+    <string name="login_subtitle">Login with your UIS account</string>
+    <string name="logging_in">Logging</string>
+    <string name="weak_password_note">Server error: weak password entered. Please try again or change password and log in</string>
+    <string name="under_maintenance_note">Network error: not yet connected to Fudan intranet and failed to log in. Please open Fudan VPN and try again.</string>
+    <string name="need_captcha_note">Server error: CAPTCHA required. Please open uis.fudan.edu.cn and log in manually.</string>
+    <string name="invalid_credentials_note">ID or password error. Please check and try again.</string>
+    <string name="id_non_empty">ID cannot be  null</string>
+    <string name="password_non_empty">Password cannot be null</string>
 </resources>
