@@ -1,9 +1,12 @@
 package com.fduhole.danxinative.repository.fdu
 
+import android.text.format.DateFormat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import okhttp3.Request
+import org.json.JSONObject
+import java.util.*
 import kotlin.coroutines.resume
 
 class ZLAppRepository : BaseFDURepository() {
@@ -21,5 +24,11 @@ class ZLAppRepository : BaseFDURepository() {
             val res = client.newCall(Request.Builder().url(GET_INFO_URL).get().build()).execute()
             it.resume(res.body?.string())
         }
+    }
+
+    suspend fun hasTick(): Boolean {
+        val obj = JSONObject(getHistoryInfo().orEmpty())
+        val info = obj.optJSONObject("info") ?: return false
+        return info.optString("date") == DateFormat.format("yyyyMMdd", Date())
     }
 }
