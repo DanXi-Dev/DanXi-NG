@@ -58,10 +58,10 @@
     <string name="second_fragment_label">Second Fragment</string>
     <string name="login_subtitle">Login with your UIS account</string>
     <string name="logging_in">Logging in</string>
-    <string name="weak_password_note">Server error: weak password entered. Please try again or change password and log in</string>
-    <string name="under_maintenance_note">Network error: not yet connect to Fudan intranet and failed to log in. Please open Fudan VPN and try again.</string>
+    <string name="weak_password_note">Server error: weak password detected. Please retry or change your password.</string>
+    <string name="under_maintenance_note">Network error: not yet connect to Fudan intranet and failed to log in. Please open Fudan VPN and retry.</string>
     <string name="need_captcha_note">Server error: CAPTCHA required. Please open uis.fudan.edu.cn and log in manually.</string>
-    <string name="invalid_credentials_note">ID or password error. Please check and try again.</string>
+    <string name="invalid_credentials_note">ID or password error. Please check and retry.</string>
     <string name="id_non_empty">ID cannot be  null</string>
     <string name="password_non_empty">Password cannot be null</string>
 </resources>
