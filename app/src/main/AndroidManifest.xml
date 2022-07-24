@@ -4,6 +4,8 @@
     package="com.fduhole.danxinative">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:name=".DanXiApplication"
@@ -17,6 +19,14 @@
         android:theme="@style/Theme.DanXiNative"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <!-- Opt-out the usage statistics collection by Google. -->
+        <meta-data
+            android:name="android.webkit.WebView.MetricsOptOut"
+            android:value="true" />
+
+        <activity
+            android:name=".BrowserActivity"
+            android:exported="false" />
         <activity
             android:name=".LoginActivity"
             android:exported="false"
