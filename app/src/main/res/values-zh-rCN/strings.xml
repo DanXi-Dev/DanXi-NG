@@ -11,4 +11,15 @@
     <string name="invalid_credentials_note">ID 或密码不正确。请确认后再输入。</string>
     <string name="id_non_empty">ID 不能为空</string>
     <string name="password_non_empty">密码不能为空</string>
+    <string name="action_settings">设置</string>
+    <string name="lorem_ipsum">[...]</string>
+    <string name="home">主页</string>
+    <string name="prompt_password">密码</string>
+    <string name="action_sign_in">登陆或注册新账号</string>
+    <string name="action_sign_in_short">登陆</string>
+    <string name="invalid_username">用户名格式不正确</string>
+    <string name="invalid_password">密码长度必须超过 5 个字符</string>
+    <string name="login_failed">登陆失败</string>
+    <string name="welcome">欢迎！</string>
+    <string name="settings">设置</string>
 </resources>
