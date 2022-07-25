@@ -67,7 +67,6 @@ class BrowserActivity : AppCompatActivity() {
             override fun onGeolocationPermissionsShowPrompt(origin: String?, callback: GeolocationPermissions.Callback?) {
                 super.onGeolocationPermissionsShowPrompt(origin, callback)
                 val permissionGrant = ContextCompat.checkSelfPermission(this@BrowserActivity, Manifest.permission.ACCESS_COARSE_LOCATION)
-                println(permissionGrant)
                 if (permissionGrant == PackageManager.PERMISSION_GRANTED) {
                     callback?.invoke(origin, true, true)
                 } else {

@@ -55,10 +55,14 @@ class FudanDailyFeature : Feature(), KoinComponent {
                 notifyRefresh()
 
                 loadingJob = featureScope.launch {
-                    status = if (zlAppRepository.hasTick()) {
-                        FudanDailyStatus.TICKED
-                    } else {
-                        FudanDailyStatus.NOT_TICKED
+                    try {
+                        status = if (zlAppRepository.hasTick()) {
+                            FudanDailyStatus.TICKED
+                        } else {
+                            FudanDailyStatus.NOT_TICKED
+                        }
+                    } catch (e: Throwable) {
+                        status = FudanDailyStatus.ERROR
                     }
                     notifyRefresh()
                 }

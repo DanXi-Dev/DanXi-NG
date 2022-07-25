@@ -28,7 +28,7 @@ class ZLAppRepository : BaseFDURepository() {
 
     suspend fun hasTick(): Boolean {
         val obj = JSONObject(getHistoryInfo().orEmpty())
-        val info = obj.optJSONObject("info") ?: return false
+        val info = obj.optJSONObject("d")!!.optJSONObject("info") ?: return false
         return info.optString("date") == DateFormat.format("yyyyMMdd", Date())
     }
 }
