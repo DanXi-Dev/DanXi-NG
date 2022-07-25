@@ -41,6 +41,8 @@ dependencies {
     // HTTP client
     implementation 'com.squareup.okhttp3:okhttp:4.10.0'
     implementation 'com.squareup.okhttp3:okhttp-urlconnection:4.10.0'
+    // HTTP API client
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     // JSON serialization
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0-RC"
     // HTML parser
