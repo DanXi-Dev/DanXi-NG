@@ -23,7 +23,7 @@ data class OTHole(
     val updatedTime: String?,
     @SerialName("time_created")
     val createdTime: String?,
-    val tags: List<OTTag>,
+    val tags: List<OTTag>?,
     @SerialName("view")
     val viewNum: Int?,
     @SerialName("reply")

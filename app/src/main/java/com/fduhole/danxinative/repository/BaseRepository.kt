@@ -33,9 +33,10 @@ abstract class BaseRepository {
         }
 
     open fun clientFactory(): OkHttpClient.Builder {
-        return OkHttpClient.Builder().cookieJar(cookieJar).cache(null)
+        return clientFactoryNoCookie().cookieJar(cookieJar)
     }
-    open fun clientFactoryNoCookie(): OkHttpClient.Builder {
+
+    fun clientFactoryNoCookie(): OkHttpClient.Builder {
         return OkHttpClient.Builder().cache(null)
     }
 
