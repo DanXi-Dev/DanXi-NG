@@ -32,13 +32,9 @@ abstract class BaseRepository {
             clients[getHost()] = value
         }
 
-    open fun clientFactory(): OkHttpClient.Builder {
-        return clientFactoryNoCookie().cookieJar(cookieJar)
-    }
+    open fun clientFactory(): OkHttpClient.Builder = clientFactoryNoCookie().cookieJar(cookieJar)
 
-    fun clientFactoryNoCookie(): OkHttpClient.Builder {
-        return OkHttpClient.Builder().cache(null)
-    }
+    fun clientFactoryNoCookie(): OkHttpClient.Builder = OkHttpClient.Builder().cache(null)
 
     abstract fun getHost(): String
 }

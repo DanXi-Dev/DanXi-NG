@@ -45,6 +45,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     // JSON serialization
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0-RC"
+    implementation "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0"
     // HTML parser
     implementation 'org.jsoup:jsoup:1.15.2'
 

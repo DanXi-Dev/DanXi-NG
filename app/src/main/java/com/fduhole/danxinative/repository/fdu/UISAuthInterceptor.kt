@@ -4,6 +4,7 @@ import android.content.res.Resources
 import com.fduhole.danxinative.R
 import com.fduhole.danxinative.state.GlobalState
 import com.fduhole.danxinative.util.ExplainableException
+import com.fduhole.danxinative.util.net.RetryCount
 import kotlinx.coroutines.runBlocking
 import okhttp3.*
 import org.jsoup.Jsoup
@@ -16,6 +17,7 @@ class UISLoginException(val type: UISLoginExceptionType) : ExplainableException(
     override fun explain(context: Resources): String = when (type) {
         UISLoginExceptionType.WeakPassword -> context.getString(R.string.weak_password_note)
         UISLoginExceptionType.UnderMaintenance -> context.getString(R.string.under_maintenance_note)
+        UISLoginExceptionType.Unknown -> context.getString(R.string.uis_login_unknown_note)
     }
 }
 
@@ -27,14 +29,14 @@ class UISLoginUnrecoverableException(val type: UISLoginUnrecoverableExceptionTyp
 }
 
 enum class UISLoginExceptionType {
-    WeakPassword, UnderMaintenance
+    WeakPassword, UnderMaintenance, Unknown
 }
 
 enum class UISLoginUnrecoverableExceptionType {
     NeedCaptcha, InvalidCredentials
 }
 
-class UISAuthInterceptor(private val repository: BaseFDURepository) : Interceptor, KoinComponent {
+class UISAuthInterceptor(private val repository: BaseFDURepository, private val maxRetryTimes: Int = 2) : Interceptor, KoinComponent {
     private val globalState: GlobalState by inject()
 
     companion object {
@@ -74,12 +76,20 @@ class UISAuthInterceptor(private val repository: BaseFDURepository) : Intercepto
 
     override fun intercept(chain: Interceptor.Chain): Response = runBlocking {
         val request = chain.request()
+        val retryCount = request.tag(RetryCount::class.java)
+        if (retryCount != null && retryCount.retryTime > maxRetryTimes) {
+            throw UISLoginException(UISLoginExceptionType.Unknown)
+        }
         var response = chain.proceed(request)
         if (request.url.host.contains(UIS_HOST)) return@runBlocking response
 
         if (response.request.url.host.contains(UIS_HOST)) {
             repository.cookieJar.replaceBy(login(globalState.person?.id.orEmpty(), globalState.person?.password.orEmpty(), repository.getUISLoginURL()))
-            response = repository.client.newCall(request).execute()
+            response = repository.client
+                .newCall(request.newBuilder()
+                    .tag(RetryCount((retryCount?.retryTime ?: 0) + 1))
+                    .build())
+                .execute()
         }
         return@runBlocking response
     }

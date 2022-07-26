@@ -64,4 +64,6 @@
     <string name="invalid_credentials_note">ID or password error. Please check and retry.</string>
     <string name="id_non_empty">ID cannot be  null</string>
     <string name="password_non_empty">Password cannot be null</string>
+    <string name="uis_login_unknown_note">服务器错误。数次尝试后仍未从服务器获得有效的响应，请重试。</string>
+    <string name="bbs">Treehole</string>
 </resources>

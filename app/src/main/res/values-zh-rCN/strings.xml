@@ -22,4 +22,6 @@
     <string name="login_failed">登陆失败</string>
     <string name="welcome">欢迎！</string>
     <string name="settings">设置</string>
+    <string name="uis_login_unknown_note">服务器错误。数次尝试后仍未从服务器获得有效的响应，请重试。</string>
+    <string name="bbs">树洞</string>
 </resources>

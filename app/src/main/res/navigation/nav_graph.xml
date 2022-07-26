@@ -10,7 +10,11 @@
         android:name="com.fduhole.danxinative.ui.HomeFragment"
         android:label="@string/home"
         tools:layout="@layout/fragment_home" />
-
+    <fragment
+        android:id="@+id/tab_bbs"
+        android:name="com.fduhole.danxinative.ui.opentreehole.BBSFragment"
+        android:label="@string/bbs"
+        tools:layout="@layout/fragment_bbs" />
     <fragment
         android:id="@+id/tab_settings"
         android:name="com.fduhole.danxinative.ui.SettingsFragment"

@@ -1,5 +1,6 @@
 package com.fduhole.danxinative.repository.opentreehole
 
+import com.fduhole.danxinative.model.opentreehole.OTJWTToken
 import com.fduhole.danxinative.model.opentreehole.OTLoginInfo
 import com.fduhole.danxinative.model.opentreehole.OTRegisterInfo
 import com.fduhole.danxinative.model.opentreehole.OTVerifyCode
@@ -21,9 +22,9 @@ interface FDUHoleAuthApiService {
     suspend fun requestEmailVerifyCode(@Query("email") email: String): Response
 
     @POST("register")
-    suspend fun register(@Body registerInfo: OTRegisterInfo)
+    suspend fun register(@Body registerInfo: OTRegisterInfo): OTJWTToken
 
     @POST("login")
-    suspend fun login(@Body loginInfo: OTLoginInfo)
+    suspend fun login(@Body loginInfo: OTLoginInfo): OTJWTToken
 
 }
