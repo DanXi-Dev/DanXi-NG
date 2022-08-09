@@ -33,7 +33,7 @@ class AAONoticePageSource : PagingSource<Int, AAONotice>(), KoinComponent {
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, AAONotice> = try {
         val pageNumber = params.key ?: 1
         val response = backend.getNoticeList(pageNumber)
-        LoadResult.Page(response, nextKey = pageNumber + 1, prevKey = null)
+        LoadResult.Page(response, nextKey = if (response.isEmpty()) null else pageNumber + 1, prevKey = null)
     } catch (e: Throwable) {
         LoadResult.Error(e)
     }
