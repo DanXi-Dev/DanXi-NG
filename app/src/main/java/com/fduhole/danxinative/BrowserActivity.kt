@@ -52,6 +52,7 @@ class BrowserActivity : AppCompatActivity() {
 
         binding.actBrowser.settings.javaScriptEnabled = true
         binding.actBrowser.settings.domStorageEnabled = true
+        binding.actBrowser.settings.builtInZoomControls = true
         binding.actBrowser.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)

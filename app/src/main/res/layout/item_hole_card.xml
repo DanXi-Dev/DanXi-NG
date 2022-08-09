@@ -48,7 +48,7 @@
                 </HorizontalScrollView>
 
                 <TextView
-                    android:id="@+id/it_feature_card_title"
+                    android:id="@+id/it_hole_card_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
@@ -56,7 +56,7 @@
                     android:textAppearance="?attr/textAppearanceCaption" />
 
                 <TextView
-                    android:id="@+id/it_feature_card_subtitle"
+                    android:id="@+id/it_hole_card_content"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
@@ -76,27 +76,6 @@
                     android:textAppearance="?attr/textAppearanceCaption"
                     android:text="Belly 写道：好好好" />
             </LinearLayout>
-
-            <!-- Buttons -->
-            <!--            <LinearLayout-->
-            <!--                android:layout_width="wrap_content"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:layout_margin="8dp"-->
-            <!--                android:orientation="horizontal">-->
-
-            <!--                <com.google.android.material.button.MaterialButton-->
-            <!--                    style="?attr/borderlessButtonStyle"-->
-            <!--                    android:layout_width="wrap_content"-->
-            <!--                    android:layout_height="wrap_content"-->
-            <!--                    android:layout_marginEnd="8dp"-->
-            <!--                    android:text="ACTION 1" />-->
-
-            <!--                <com.google.android.material.button.MaterialButton-->
-            <!--                    style="?attr/borderlessButtonStyle"-->
-            <!--                    android:layout_width="wrap_content"-->
-            <!--                    android:layout_height="wrap_content"-->
-            <!--                    android:text="ACTION 1" />-->
-            <!--            </LinearLayout>-->
 
         </LinearLayout>
 

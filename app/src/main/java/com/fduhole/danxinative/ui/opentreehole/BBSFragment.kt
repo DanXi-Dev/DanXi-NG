@@ -5,8 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import com.fduhole.danxinative.R
+import androidx.fragment.app.viewModels
+import com.fduhole.danxinative.databinding.FragmentBbsBinding
 
 class BBSFragment : Fragment() {
 
@@ -14,19 +14,19 @@ class BBSFragment : Fragment() {
         fun newInstance() = BBSFragment()
     }
 
-    private lateinit var viewModel: BBSViewModel
-
+    private val viewModel: BBSViewModel by viewModels()
+    private lateinit var binding: FragmentBbsBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
-        return inflater.inflate(R.layout.fragment_bbs, container, false)
+    ): View {
+        binding = FragmentBbsBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(BBSViewModel::class.java)
-        // TODO: Use the ViewModel
-    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+    }
 }

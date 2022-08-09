@@ -2,6 +2,7 @@ package com.fduhole.danxinative.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fduhole.danxinative.base.feature.FudanAAONoticesFeature
 import com.fduhole.danxinative.base.feature.FudanDailyFeature
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,8 +14,7 @@ class HomeViewModel : ViewModel() {
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
     private suspend fun buildFeatures() {
-        val fudanDailyFeature = FudanDailyFeature()
-        _uiState.emit(HomeUiState(listOf(fudanDailyFeature)))
+        _uiState.emit(HomeUiState(listOf(FudanDailyFeature(), FudanAAONoticesFeature())))
     }
 
     private suspend fun ensureFeatureBuilt() {

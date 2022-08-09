@@ -1,17 +1,14 @@
 package com.fduhole.danxinative.repository.fdu
 
-import android.util.Log
 import com.fduhole.danxinative.model.AAONotice
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
-import kotlin.coroutines.resume
-import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
-import okhttp3.internal.wait
 import org.jsoup.Jsoup
 import org.jsoup.select.Elements
+import kotlin.coroutines.resume
 
 class AAORepository : BaseFDURepository() {
     companion object {
@@ -26,7 +23,7 @@ class AAORepository : BaseFDURepository() {
     fun getNoticeListUrl(type: String, page: Int): String =
         "${getHost()}/$type/list${if (page <= 1) "" else page}.htm"
 
-    suspend fun getNoticeList(page: Int, type: String = TYPE_NOTICE_ANNOUNCEMENT): List<AAONotice>? =
+    suspend fun getNoticeList(page: Int, type: String = TYPE_NOTICE_ANNOUNCEMENT): List<AAONotice> =
         withContext(Dispatchers.IO) {
             suspendCancellableCoroutine {
                 val res: Response = client.newCall(
