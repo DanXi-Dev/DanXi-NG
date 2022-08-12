@@ -18,7 +18,7 @@ import com.fduhole.danxinative.util.lifecycle.watch
 import kotlinx.coroutines.launch
 
 data class HomeUiState(
-    val features: List<Feature> = listOf()
+    val features: List<Feature> = listOf(),
 )
 
 class HomeFragment : Fragment() {
@@ -27,7 +27,7 @@ class HomeFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
@@ -67,6 +67,7 @@ class HomeFragment : Fragment() {
             item.itFeatureCardTitle.text = features[position].getTitle()
             item.itFeatureCardSubtitle.text = features[position].getSubTitle()
             item.itFeatureCardTertiaryTitle.visibility = View.GONE
+            features[position].getIconId()?.let { item.itFeatureCardIcon.setImageResource(it) }
             return item.root
         }
 

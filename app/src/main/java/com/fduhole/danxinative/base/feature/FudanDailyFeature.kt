@@ -3,6 +3,7 @@ package com.fduhole.danxinative.base.feature
 import android.content.Context
 import android.content.Intent
 import com.fduhole.danxinative.BrowserActivity
+import com.fduhole.danxinative.R
 import com.fduhole.danxinative.base.Feature
 import com.fduhole.danxinative.repository.fdu.ZLAppRepository
 import com.fduhole.danxinative.state.GlobalState
@@ -32,6 +33,8 @@ class FudanDailyFeature : Feature(), KoinComponent {
         FudanDailyStatus.NOT_TICKED -> "今日尚未打卡，轻触进行"
         FudanDailyStatus.TICKED -> "今日已打卡"
     }
+
+    override fun getIconId(): Int = R.drawable.ic_baseline_library_add_check_24
 
     override fun inProgress(): Boolean = status == FudanDailyStatus.LOADING
 

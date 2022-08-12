@@ -10,10 +10,6 @@ import com.fduhole.danxinative.databinding.FragmentBbsBinding
 
 class BBSFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = BBSFragment()
-    }
-
     private val viewModel: BBSViewModel by viewModels()
     private lateinit var binding: FragmentBbsBinding
     override fun onCreateView(
