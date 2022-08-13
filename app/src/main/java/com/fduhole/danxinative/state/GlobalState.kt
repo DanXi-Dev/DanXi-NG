@@ -5,9 +5,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.fduhole.danxinative.model.PersonInfo
 import com.fduhole.danxinative.model.opentreehole.OTJWTToken
-import com.fduhole.danxinative.repository.fdu.AAORepository
-import com.fduhole.danxinative.repository.fdu.EhallRepository
-import com.fduhole.danxinative.repository.fdu.ZLAppRepository
+import com.fduhole.danxinative.repository.fdu.*
 import com.fduhole.danxinative.repository.opentreehole.FDUHoleRepository
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
@@ -21,6 +19,7 @@ val appModule = module {
     single { EhallRepository() }
     single { FDUHoleRepository() }
     single { AAORepository() }
+    single { LibraryRepository() }
 }
 
 class GlobalState constructor(private val sp: SharedPreferences) {
