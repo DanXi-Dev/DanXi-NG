@@ -43,17 +43,15 @@ class FudanLibraryAttendanceFeature : Feature(), KoinComponent {
         status = FudanLibraryAttendanceStatus.LOADING
         notifyRefresh()
         featureScope.launch {
-            val attendanceList = repo.getAttendanceList()
-            if (attendanceList.size != LIBRARY_NAME.size) {
+            try {
+                val attendanceList = repo.getAttendanceList()
+                attendanceContent = LIBRARY_NAME.zip(attendanceList)
+                    .map { "${it.first}: ${it.second} " }
+                    .reduce { acc, s -> acc + s }
+                status = FudanLibraryAttendanceStatus.LOADED
+            } catch (e: Throwable) {
                 status = FudanLibraryAttendanceStatus.ERROR
-                notifyRefresh()
-                return@launch
             }
-
-            attendanceContent = LIBRARY_NAME.zip(attendanceList)
-                .map { "${it.first}: ${it.second} " }
-                .reduce { acc, s -> acc + s }
-            status = FudanLibraryAttendanceStatus.LOADED
             notifyRefresh()
         }
     }
