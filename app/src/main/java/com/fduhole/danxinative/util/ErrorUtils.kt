@@ -11,6 +11,12 @@ abstract class ExplainableException : Exception() {
     abstract fun explain(context: Resources): String
 }
 
+/**
+ * UnsuitableTimeException is related to Dining Crowdedness.
+ */
+class UnsuitableTimeException : Exception() {
+}
+
 class ErrorUtils {
     companion object {
         fun describeError(context: Context, error: Throwable): String = describeError(context.resources, error)
