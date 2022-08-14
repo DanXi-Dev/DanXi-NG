@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fduhole.danxinative.base.feature.FudanAAONoticesFeature
 import com.fduhole.danxinative.base.feature.FudanDailyFeature
+import com.fduhole.danxinative.base.feature.FudanDiningHallCrowdednessFeature
 import com.fduhole.danxinative.base.feature.FudanLibraryAttendanceFeature
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,7 +19,8 @@ class HomeViewModel : ViewModel() {
         _uiState.emit(HomeUiState(listOf(
             FudanDailyFeature(),
             FudanAAONoticesFeature(),
-            FudanLibraryAttendanceFeature()
+            FudanLibraryAttendanceFeature(),
+            FudanDiningHallCrowdednessFeature()
         )))
     }
 
