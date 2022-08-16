@@ -1,12 +1,9 @@
 package com.fduhole.danxinative.repository.fdu
 
-import com.fduhole.danxinative.model.AAONotice
-import com.fduhole.danxinative.repository.fdu.AAORepository
-import kotlinx.coroutines.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import okhttp3.internal.wait
+import org.junit.Assert.assertEquals
 import org.junit.Test
-import org.junit.Assert.*
 
 class AAORepositoryUnitTest {
     private val repo = AAORepository()
@@ -22,9 +19,10 @@ class AAORepositoryUnitTest {
         assertEquals("https://jwc.fudan.edu.cn", repo.getHost())
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun getNoticeList() = runTest {
         val notices = repo.getNoticeList(2)
-        assertEquals(14, notices?.size)
+        assertEquals(14, notices.size)
     }
 }

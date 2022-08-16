@@ -2,6 +2,7 @@ package com.fduhole.danxinative.repository.fdu
 
 import android.content.res.Resources
 import com.fduhole.danxinative.R
+import com.fduhole.danxinative.model.PersonInfo
 import com.fduhole.danxinative.state.GlobalState
 import com.fduhole.danxinative.util.ExplainableException
 import com.fduhole.danxinative.util.net.RetryCount
@@ -36,8 +37,10 @@ enum class UISLoginUnrecoverableExceptionType {
     NeedCaptcha, InvalidCredentials
 }
 
-class UISAuthInterceptor(private val repository: BaseFDURepository, private val maxRetryTimes: Int = 2) : Interceptor, KoinComponent {
+class UISAuthInterceptor(private val repository: BaseFDURepository, private val tempPersonInfo: PersonInfo? = null, private val maxRetryTimes: Int = 2) : Interceptor,
+    KoinComponent {
     private val globalState: GlobalState by inject()
+    private val personInfo: PersonInfo? by lazy { tempPersonInfo ?: globalState.person }
 
     companion object {
         const val UIS_HOST = "uis.fudan.edu.cn"
@@ -84,7 +87,7 @@ class UISAuthInterceptor(private val repository: BaseFDURepository, private val 
         if (request.url.host.contains(UIS_HOST)) return@runBlocking response
 
         if (response.request.url.host.contains(UIS_HOST)) {
-            repository.cookieJar.replaceBy(login(globalState.person?.id.orEmpty(), globalState.person?.password.orEmpty(), repository.getUISLoginURL()))
+            repository.cookieJar.replaceBy(login(personInfo?.id.orEmpty(), personInfo?.password.orEmpty(), repository.getUISLoginURL()))
             response = repository.client
                 .newCall(request.newBuilder()
                     .tag(RetryCount((retryCount?.retryTime ?: 0) + 1))
