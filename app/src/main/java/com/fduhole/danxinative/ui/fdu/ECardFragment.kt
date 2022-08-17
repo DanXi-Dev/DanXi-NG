@@ -82,7 +82,8 @@ class ECardAdapter(diffCallback: DiffUtil.ItemCallback<CardRecord>) :
         fun bind(item: CardRecord?) {
             binding.apply {
                 mtrlListItemText.text = item?.location
-                mtrlListItemSecondaryText.text = item?.time?.toDateTimeString("yyyy-MM-dd hh:mm:ss")
+                mtrlListItemSecondaryText.text = item?.time?.toDateTimeString("yyyy-MM-dd HH:mm:ss")
+                mtrlListItemTrailingIcon.text = item?.payment
             }
         }
     }
