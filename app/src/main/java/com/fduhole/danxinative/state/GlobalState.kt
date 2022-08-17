@@ -20,6 +20,7 @@ val appModule = module {
     single { FDUHoleRepository() }
     single { AAORepository() }
     single { LibraryRepository() }
+    single { ECardRepository() }
 }
 
 class GlobalState constructor(private val sp: SharedPreferences) {

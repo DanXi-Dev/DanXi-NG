@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.fdu.AAONoticesFragment">
+    tools:context=".ui.fdu.ECardFragment">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/frag_aao_notices_list"
+        android:id="@+id/frag_ecard_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />

@@ -18,5 +18,5 @@ abstract class Feature {
     }
 
     open fun onCreated() {}
-    fun notifyRefresh() = callback.invoke()
+    fun notifyChanged() = callback.invoke()
 }

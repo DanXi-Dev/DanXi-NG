@@ -25,6 +25,7 @@ class ECardRepository : BaseFDURepository() {
     override fun getHost(): String = "ecard.fudan.edu.cn"
 
     companion object {
+        const val RECENT_RECORDS = 0
         const val _USER_DETAIL_URL = "https://ecard.fudan.edu.cn/epay/myepay/index"
         const val _CONSUME_DETAIL_URL = "https://ecard.fudan.edu.cn/epay/consume/query"
         const val _CONSUME_DETAIL_CSRF_URL = "https://ecard.fudan.edu.cn/epay/consume/index"
@@ -60,7 +61,22 @@ class ECardRepository : BaseFDURepository() {
      * If [dayNum] = 0, it returns the last ten records;
      * if [dayNum] < 0, it throws an error.
      */
-    suspend fun getCardRecords(dayNum: Int): List<CardRecord> = withContext(Dispatchers.IO) {
+    suspend fun getCardRecords(dayNum: Int): List<CardRecord> {
+        val payloadAndPageNum = getPagedCardRecordsPayloadAndPageNum(dayNum)
+        val list = arrayListOf<CardRecord>()
+        for (i in 1..payloadAndPageNum.second) {
+            list.addAll(getPagedCardRecords(payloadAndPageNum.first, i))
+        }
+        return list
+    }
+
+    suspend fun getPagedCardRecords(payload: Map<String, String>, pageIndex: Int): List<CardRecord> = withContext(Dispatchers.IO) {
+        suspendCancellableCoroutine {
+            it.resume(requireNotNull(loadOnePageCardRecord(payload, pageIndex)) { "Got null data at page index $pageIndex" })
+        }
+    }
+
+    suspend fun getPagedCardRecordsPayloadAndPageNum(dayNum: Int): Pair<Map<String, String>, Int> = withContext(Dispatchers.IO) {
         suspendCancellableCoroutine {
             require(dayNum >= 0) { "Day number should not be less than 0." }
             val consumeCsrfPageResponse = client.newCall(Request.Builder().get().url(_CONSUME_DETAIL_CSRF_URL).build()).execute()
@@ -96,12 +112,7 @@ class ECardRepository : BaseFDURepository() {
                     .build()).execute()
                 totalPages = detailResponse.body?.string()?.between("</b>/", "页")?.toIntOrNull() ?: 0
             }
-            // Get pages.
-            val list: ArrayList<CardRecord> = arrayListOf()
-            for (i in 1..totalPages) {
-                list.addAll(requireNotNull(loadOnePageCardRecord(payload, i)) { "Got null data at page index $i" })
-            }
-            it.resume(list)
+            it.resume(payload to totalPages)
         }
     }
 
