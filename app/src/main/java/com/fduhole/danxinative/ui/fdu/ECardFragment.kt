@@ -17,14 +17,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.fduhole.danxinative.databinding.FragmentEcardBinding
 import com.fduhole.danxinative.databinding.ItemListTileBinding
 import com.fduhole.danxinative.model.CardRecord
-import com.fduhole.danxinative.state.GlobalState
 import com.fduhole.danxinative.util.lifecycle.watch
 import com.fduhole.danxinative.util.toDateTimeString
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
 data class ECardUiState(
     val flow: Flow<PagingData<CardRecord>>? = null,
@@ -33,7 +31,6 @@ data class ECardUiState(
 class ECardFragment : Fragment(), KoinComponent {
 
     private val viewModel: ECardViewModel by viewModels()
-    private val globalState: GlobalState by inject()
     private lateinit var binding: FragmentEcardBinding
 
     override fun onCreateView(

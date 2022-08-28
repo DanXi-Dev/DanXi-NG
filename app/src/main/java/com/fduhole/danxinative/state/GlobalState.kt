@@ -3,6 +3,9 @@ package com.fduhole.danxinative.state
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKey
+import androidx.security.crypto.MasterKeys
 import com.fduhole.danxinative.model.PersonInfo
 import com.fduhole.danxinative.model.opentreehole.OTJWTToken
 import com.fduhole.danxinative.repository.fdu.*
@@ -13,7 +16,14 @@ import kotlinx.serialization.json.Json
 import org.koin.dsl.module
 
 val appModule = module {
-    single<SharedPreferences> { get<Context>().getSharedPreferences("app_pref", Context.MODE_PRIVATE) }
+    single { MasterKey.Builder(get()).setKeyGenParameterSpec(MasterKeys.AES256_GCM_SPEC).build() }
+    single {
+        EncryptedSharedPreferences.create(get<Context>(),
+            "app_pref",
+            get(),
+            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM)
+    }
     single { GlobalState(get()) }
     single { ZLAppRepository() }
     single { EhallRepository() }
