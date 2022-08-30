@@ -22,7 +22,7 @@ import kotlin.time.Duration.Companion.days
 class ECardRepository : BaseFDURepository() {
     override fun getUISLoginURL(): String = "https://uis.fudan.edu.cn/authserver/login?service=https%3A%2F%2Fecard.fudan.edu.cn%2Fepay%2Fj_spring_cas_security_check"
 
-    override fun getHost(): String = "ecard.fudan.edu.cn"
+    override fun getScopeId(): String = "fudan.edu.cn"
 
     companion object {
         const val RECENT_RECORDS = 0

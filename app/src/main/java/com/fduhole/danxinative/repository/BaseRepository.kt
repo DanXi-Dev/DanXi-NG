@@ -15,26 +15,31 @@ abstract class BaseRepository {
 
     val cookieJar: MemoryCookieJar
         get() {
-            if (!cookieJars.containsKey(getHost())) {
-                cookieJars[getHost()] = MemoryCookieJar(JavaNetCookieJar(CookieManager(null, CookiePolicy.ACCEPT_ALL)))
+            if (!cookieJars.containsKey(getScopeId())) {
+                cookieJars[getScopeId()] = MemoryCookieJar(JavaNetCookieJar(CookieManager(null, CookiePolicy.ACCEPT_ALL)))
             }
-            return cookieJars[getHost()]!!
+            return cookieJars[getScopeId()]!!
         }
 
     var client: OkHttpClient
         get() {
-            if (!clients.containsKey(getHost())) {
+            if (!clients.containsKey(getScopeId())) {
                 client = clientFactory().build()
             }
-            return clients[getHost()]!!
+            return clients[getScopeId()]!!
         }
         set(value) {
-            clients[getHost()] = value
+            clients[getScopeId()] = value
         }
 
     open fun clientFactory(): OkHttpClient.Builder = clientFactoryNoCookie().cookieJar(cookieJar)
 
     fun clientFactoryNoCookie(): OkHttpClient.Builder = OkHttpClient.Builder().cache(null)
 
-    abstract fun getHost(): String
+    /**
+     * Get the scope id of the repository.
+     *
+     * The repositories with the same id will share one client and cookie jar.
+     */
+    abstract fun getScopeId(): String
 }

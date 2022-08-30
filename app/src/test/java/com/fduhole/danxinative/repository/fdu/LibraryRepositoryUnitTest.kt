@@ -8,9 +8,6 @@ import org.junit.Test
 class LibraryRepositoryUnitTest {
     private val repo = LibraryRepository()
 
-    @Test fun getHost() {
-        assertEquals("http://10.55.101.62/book/show", repo.getHost())
-    }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test fun getLibraryAttendanceList() = runTest {

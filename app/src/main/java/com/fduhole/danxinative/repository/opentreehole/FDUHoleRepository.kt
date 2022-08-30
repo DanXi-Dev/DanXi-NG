@@ -35,7 +35,7 @@ class FDUHoleRepository : BaseRepository() {
     }
 
 
-    override fun getHost(): String = "fduhole.com"
+    override fun getScopeId(): String = "fduhole.com"
 
     suspend fun login(email: String, password: String): OTJWTToken = authApiService.login(OTLoginInfo(password, email))
 }

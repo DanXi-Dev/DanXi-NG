@@ -13,7 +13,7 @@ class LibraryRepository : BaseRepository() {
         const val GET_INFO_URL = "http://10.55.101.62/book/show"
     }
 
-    override fun getHost(): String = "10.55.101.62"
+    override fun getScopeId(): String = "10.55.101.62"
 
     /**
      * @return a list whose size is 6.

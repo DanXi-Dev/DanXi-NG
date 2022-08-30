@@ -7,6 +7,8 @@ import com.fduhole.danxinative.state.GlobalState
 import com.fduhole.danxinative.util.ExplainableException
 import com.fduhole.danxinative.util.net.RetryCount
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import okhttp3.*
 import org.jsoup.Jsoup
 import org.koin.core.component.KoinComponent
@@ -43,6 +45,7 @@ class UISAuthInterceptor(private val repository: BaseFDURepository, private val 
     private val personInfo: PersonInfo? by lazy { tempPersonInfo ?: globalState.person }
 
     companion object {
+        private val mutex = Mutex()
         const val UIS_HOST = "uis.fudan.edu.cn"
         const val CAPTCHA_CODE_NEEDED = "请输入验证码";
         const val CREDENTIALS_INVALID = "密码有误";
@@ -87,12 +90,14 @@ class UISAuthInterceptor(private val repository: BaseFDURepository, private val 
         if (request.url.host.contains(UIS_HOST)) return@runBlocking response
 
         if (response.request.url.host.contains(UIS_HOST)) {
-            repository.cookieJar.replaceBy(login(personInfo?.id.orEmpty(), personInfo?.password.orEmpty(), repository.getUISLoginURL()))
-            response = repository.client
-                .newCall(request.newBuilder()
-                    .tag(RetryCount((retryCount?.retryTime ?: 0) + 1))
-                    .build())
-                .execute()
+            mutex.withLock {
+                repository.cookieJar.replaceBy(login(personInfo?.id.orEmpty(), personInfo?.password.orEmpty(), repository.getUISLoginURL()))
+                response = repository.client
+                    .newCall(request.newBuilder()
+                        .tag(RetryCount((retryCount?.retryTime ?: 0) + 1))
+                        .build())
+                    .execute()
+            }
         }
         return@runBlocking response
     }

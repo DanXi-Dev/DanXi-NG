@@ -17,7 +17,7 @@ class ZLAppRepository : BaseFDURepository() {
     override fun getUISLoginURL(): String =
         "https://uis.fudan.edu.cn/authserver/login?service=https%3A%2F%2Fzlapp.fudan.edu.cn%2Fa_fudanzlapp%2Fapi%2Fsso%2Findex%3Fredirect%3Dhttps%253A%252F%252Fzlapp.fudan.edu.cn%252Fsite%252Fncov%252FfudanDaily%253Ffrom%253Dhistory%26from%3Dwap"
 
-    override fun getHost(): String = "zlapp.fudan.edu.cn"
+    override fun getScopeId(): String = "fudan.edu.cn"
 
     private suspend fun getHistoryInfo(): String? = withContext(Dispatchers.IO) {
         suspendCancellableCoroutine {

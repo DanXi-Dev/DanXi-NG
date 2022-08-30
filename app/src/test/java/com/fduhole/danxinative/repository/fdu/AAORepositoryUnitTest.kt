@@ -14,10 +14,6 @@ class AAORepositoryUnitTest {
         assertEquals("https://uis.fudan.edu.cn/authserver/login?service=http%3A%2F%2Fjwc.fudan.edu.cn%2Feb%2Fb7%2Fc9397a388023%2Fpage.psp", loginURL)
     }
 
-    @Test
-    fun getHost() {
-        assertEquals("https://jwc.fudan.edu.cn", repo.getHost())
-    }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test

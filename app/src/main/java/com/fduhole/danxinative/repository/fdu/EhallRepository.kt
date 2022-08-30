@@ -23,7 +23,7 @@ class EhallRepository : BaseRepository() {
     }
 
 
-    override fun getHost(): String = "ehall.fudan.edu.cn"
+    override fun getScopeId(): String = "ehall.fudan.edu.cn"
 
     suspend fun getStudentInfo(info: PersonInfo): StudentInfo = withContext(Dispatchers.IO) {
         suspendCancellableCoroutine {

@@ -13,15 +13,16 @@ import kotlin.coroutines.resume
 class AAORepository : BaseFDURepository() {
     companion object {
         const val TYPE_NOTICE_ANNOUNCEMENT = "9397"
+        private const val HOST = "https://jwc.fudan.edu.cn"
     }
 
     override fun getUISLoginURL(): String =
         "https://uis.fudan.edu.cn/authserver/login?service=http%3A%2F%2Fjwc.fudan.edu.cn%2Feb%2Fb7%2Fc9397a388023%2Fpage.psp";
 
-    override fun getHost(): String = "https://jwc.fudan.edu.cn"
+    override fun getScopeId(): String = "fudan.edu.cn"
 
     fun getNoticeListUrl(type: String, page: Int): String =
-        "${getHost()}/$type/list${if (page <= 1) "" else page}.htm"
+        "$HOST/$type/list${if (page <= 1) "" else page}.htm"
 
     suspend fun getNoticeList(page: Int, type: String = TYPE_NOTICE_ANNOUNCEMENT): List<AAONotice> =
         withContext(Dispatchers.IO) {
@@ -37,7 +38,7 @@ class AAORepository : BaseFDURepository() {
                     val noticeInfo: Elements = element.select("tr").select("td")
                     val notice = AAONotice(
                         noticeInfo[0].text().trim(),
-                        getHost() + noticeInfo[0].select("a").attr("href"),
+                        HOST + noticeInfo[0].select("a").attr("href"),
                         noticeInfo[1].text().trim()
                     )
                     noticeList.add(notice)
