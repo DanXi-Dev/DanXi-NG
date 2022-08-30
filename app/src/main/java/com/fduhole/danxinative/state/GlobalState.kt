@@ -33,7 +33,7 @@ val appModule = module {
     single { ECardRepository() }
 }
 
-class GlobalState constructor(private val sp: SharedPreferences) {
+class GlobalState constructor(val preferences: SharedPreferences) {
 
     companion object {
         const val KEY_PERSON_INFO = "person_info"
@@ -42,26 +42,26 @@ class GlobalState constructor(private val sp: SharedPreferences) {
 
     var person: PersonInfo?
         get() {
-            if (sp.contains(KEY_PERSON_INFO)) {
+            if (preferences.contains(KEY_PERSON_INFO)) {
                 try {
-                    return Json.decodeFromString(sp.getString(KEY_PERSON_INFO, "")!!)
+                    return Json.decodeFromString(preferences.getString(KEY_PERSON_INFO, "")!!)
                 } catch (_: Exception) {
                 }
             }
             return null
         }
-        set(value) = sp.edit().putString(KEY_PERSON_INFO, Json.encodeToString(value)).apply()
+        set(value) = preferences.edit().putString(KEY_PERSON_INFO, Json.encodeToString(value)).apply()
 
     var fduholeToken: OTJWTToken?
         get() {
-            if (sp.contains(KEY_FDUHOLE_TOKEN)) {
+            if (preferences.contains(KEY_FDUHOLE_TOKEN)) {
                 try {
-                    return Json.decodeFromString(sp.getString(KEY_FDUHOLE_TOKEN, "")!!)
+                    return Json.decodeFromString(preferences.getString(KEY_FDUHOLE_TOKEN, "")!!)
                 } catch (_: Exception) {
                 }
 
             }
             return null
         }
-        set(value) = sp.edit().putString(KEY_FDUHOLE_TOKEN, Json.encodeToString(value)).apply()
+        set(value) = preferences.edit().putString(KEY_FDUHOLE_TOKEN, Json.encodeToString(value)).apply()
 }

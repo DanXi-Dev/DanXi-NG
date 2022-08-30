@@ -1,9 +1,21 @@
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory app:title="账户">
 
-        <Preference app:title="UIS 账户" app:key="campus_account"/>
+        <Preference
+            app:icon="@drawable/ic_baseline_person_24"
+            app:key="campus_account"
+            app:title="UIS 账户" />
 
     </PreferenceCategory>
+    <PreferenceCategory app:title="易用性">
 
+        <SwitchPreferenceCompat
+            app:icon="@drawable/ic_baseline_accessibility_new_24"
+            app:key="high_contrast_color"
+            app:defaultValue="false"
+            app:summary="在部分页面启用更易识别的配色风格"
+            app:title="高对比度色彩" />
+
+    </PreferenceCategory>
 </PreferenceScreen>
