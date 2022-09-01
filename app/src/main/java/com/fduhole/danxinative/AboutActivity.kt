@@ -18,6 +18,7 @@ class AboutActivity : AbsAboutActivity() {
                 Card(getString(R.string.app_description)),
                 Category(getString(R.string.developers)),
                 Contributor(R.drawable.w568w, "w568w", "Android 主要开发者", "https://github.com/w568w"),
+                Contributor(R.drawable.skyleaworld, "skyleaworlder", "Android 主要开发者", "https://github.com/skyleaworlder"),
                 Contributor(R.drawable.fsy2001, "fsy2001", "iOS 主要开发者", "https://github.com/fsy2001"),
                 Contributor(R.drawable.kavinzhao, "singularity", "iOS 主要开发者", "https://github.com/singularity-s0"),
                 Contributor(R.drawable.ivanfei, "Ivan Fei", "App 图标 & UI 设计", "https://github.com/ivanfei-1"),
