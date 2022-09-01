@@ -1,19 +1,17 @@
 package com.fduhole.danxinative
 
 import android.Manifest
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.webkit.GeolocationPermissions
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
 import com.fduhole.danxinative.databinding.ActivityBrowserBinding
+import com.permissionx.guolindev.PermissionX
 import kotlinx.coroutines.delay
 
 class BrowserActivity : AppCompatActivity() {
@@ -23,7 +21,6 @@ class BrowserActivity : AppCompatActivity() {
         const val KEY_EXECUTE_IF_START_WITH = "executeIfStartWith"
     }
 
-    private val callbacks: MutableList<() -> Unit> = mutableListOf()
     private val binding: ActivityBrowserBinding by lazy { ActivityBrowserBinding.inflate(LayoutInflater.from(this)) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,18 +34,6 @@ class BrowserActivity : AppCompatActivity() {
             finish()
             return
         }
-
-        val requestPermissionLauncher =
-            registerForActivityResult(
-                ActivityResultContracts.RequestPermission()
-            ) { isGranted: Boolean ->
-                if (isGranted) {
-                    for (callback in callbacks) {
-                        callback.invoke()
-                    }
-                    callbacks.clear()
-                }
-            }
 
         binding.actBrowser.settings.javaScriptEnabled = true
         binding.actBrowser.settings.domStorageEnabled = true
@@ -67,13 +52,15 @@ class BrowserActivity : AppCompatActivity() {
         binding.actBrowser.webChromeClient = object : WebChromeClient() {
             override fun onGeolocationPermissionsShowPrompt(origin: String?, callback: GeolocationPermissions.Callback?) {
                 super.onGeolocationPermissionsShowPrompt(origin, callback)
-                val permissionGrant = ContextCompat.checkSelfPermission(this@BrowserActivity, Manifest.permission.ACCESS_COARSE_LOCATION)
-                if (permissionGrant == PackageManager.PERMISSION_GRANTED) {
-                    callback?.invoke(origin, true, true)
-                } else {
-                    callbacks.add { callback?.invoke(origin, true, true) }
-                    requestPermissionLauncher.launch(Manifest.permission.ACCESS_COARSE_LOCATION)
-                }
+                PermissionX.init(this@BrowserActivity)
+                    .permissions(Manifest.permission.ACCESS_COARSE_LOCATION)
+                    .explainReasonBeforeRequest()
+                    .onExplainRequestReason { scope, deniedList ->
+                        scope.showRequestReasonDialog(deniedList, "我们向您请求大致位置权限，是因为当前页面正在调用 Geolocation API 来获知您的大致位置。", "允许", "拒绝")
+                    }
+                    .request { allGranted, grantedList, deniedList ->
+                        callback?.invoke(origin, allGranted, allGranted)
+                    }
             }
         }
         binding.actBrowser.loadUrl(url)

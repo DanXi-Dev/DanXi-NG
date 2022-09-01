@@ -61,6 +61,8 @@ dependencies {
     // About page
     implementation 'com.drakeet.about:about:2.5.2'
     implementation 'com.drakeet.multitype:multitype:4.3.0'
+    // Permission request
+    implementation 'com.guolindev.permissionx:permissionx:1.6.4'
 
     implementation 'androidx.core:core-ktx:1.8.0'
     implementation 'androidx.appcompat:appcompat:1.4.2'
