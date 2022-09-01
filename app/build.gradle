@@ -58,6 +58,9 @@ dependencies {
     // 2022-08-27 Note (@w568w): `security-crypto-ktx:1.1.0-alpha03` seems to only support API 23+, while the library
     // without `-ktx` supports 21+.
     implementation "androidx.security:security-crypto:1.1.0-alpha03"
+    // About page
+    implementation 'com.drakeet.about:about:2.5.2'
+    implementation 'com.drakeet.multitype:multitype:4.3.0'
 
     implementation 'androidx.core:core-ktx:1.8.0'
     implementation 'androidx.appcompat:appcompat:1.4.2'

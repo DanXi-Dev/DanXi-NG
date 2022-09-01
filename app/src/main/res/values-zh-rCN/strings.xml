@@ -24,4 +24,8 @@
     <string name="settings">设置</string>
     <string name="uis_login_unknown_note">服务器错误。数次尝试后仍未从服务器获得有效的响应，请重试。</string>
     <string name="bbs">树洞</string>
+    <string name="app_description">由几位复旦本科学生用爱发电打造的微型复旦综合服务 App，希望能为你的生活提供便利~</string>
+    <string name="app_description_title">简介</string>
+    <string name="developers">开发者</string>
+    <string name="license">开源软件许可协议</string>
 </resources>

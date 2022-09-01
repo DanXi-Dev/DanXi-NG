@@ -18,9 +18,12 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="s">
         <activity
+            android:label="关于"
+            android:name=".AboutActivity"
+            android:exported="false"/>
+        <activity
             android:name=".SingleFragmentActivity"
-            android:exported="false" />
-        <!-- Opt-out the usage statistics collection by Google. -->
+            android:exported="false" /> <!-- Opt-out the usage statistics collection by Google. -->
         <meta-data
             android:name="android.webkit.WebView.MetricsOptOut"
             android:value="true" />

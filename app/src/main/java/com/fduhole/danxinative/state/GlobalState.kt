@@ -3,6 +3,7 @@ package com.fduhole.danxinative.state
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.core.content.edit
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import androidx.security.crypto.MasterKeys
@@ -38,6 +39,18 @@ class GlobalState constructor(val preferences: SharedPreferences) {
     companion object {
         const val KEY_PERSON_INFO = "person_info"
         const val KEY_FDUHOLE_TOKEN = "fduhole_token"
+
+        /**
+         * The keys below are defined in `root_preferences.xml`.
+         */
+        const val KEY_HIGH_CONTRAST_COLOR = "high_contrast_color"
+    }
+
+
+    inner class Pref {
+        var highContrastColor: Boolean
+            get() = preferences.getBoolean(KEY_HIGH_CONTRAST_COLOR, false)
+            set(value) = preferences.edit { putBoolean(KEY_HIGH_CONTRAST_COLOR, value) }
     }
 
     var person: PersonInfo?
