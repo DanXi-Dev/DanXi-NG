@@ -25,11 +25,10 @@ class ECardRepository : BaseFDURepository() {
     override fun getScopeId(): String = "fudan.edu.cn"
 
     companion object {
-        const val RECENT_RECORDS = 0
-        const val _USER_DETAIL_URL = "https://ecard.fudan.edu.cn/epay/myepay/index"
-        const val _CONSUME_DETAIL_URL = "https://ecard.fudan.edu.cn/epay/consume/query"
-        const val _CONSUME_DETAIL_CSRF_URL = "https://ecard.fudan.edu.cn/epay/consume/index"
-        val _CONSUME_DETAIL_HEADER = mapOf(
+        const val USER_DETAIL_URL = "https://ecard.fudan.edu.cn/epay/myepay/index"
+        const val CONSUME_DETAIL_URL = "https://ecard.fudan.edu.cn/epay/consume/query"
+        const val CONSUME_DETAIL_CSRF_URL = "https://ecard.fudan.edu.cn/epay/consume/index"
+        val CONSUME_DETAIL_HEADER = mapOf(
             "User-Agent" to "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0",
             "Accept" to "text/xml",
             "Accept-Language" to "zh-CN,en-US;q=0.7,en;q=0.3",
@@ -40,6 +39,7 @@ class ECardRepository : BaseFDURepository() {
             "Referer" to "https://ecard.fudan.edu.cn/epay/consume/index",
             "Sec-GPC" to "1"
         )
+        const val QR_URL = "https://ecard.fudan.edu.cn/epay/wxpage/fudan/zfm/qrcode"
     }
 
     /**
@@ -47,7 +47,7 @@ class ECardRepository : BaseFDURepository() {
      */
     suspend fun getCardPersonInfo(): CardPersonInfo = withContext(Dispatchers.IO) {
         suspendCancellableCoroutine {
-            val res = client.newCall(Request.Builder().get().url(_USER_DETAIL_URL).build()).execute()
+            val res = client.newCall(Request.Builder().get().url(USER_DETAIL_URL).build()).execute()
             val body = res.body?.string()
             val balance = requireNotNull(body?.between("<p>账户余额：", "元</p>")) { "balance cannot be null." }
             val name = requireNotNull(body?.between("姓名：", "</p>")) { "name cannot be null." }
@@ -79,10 +79,10 @@ class ECardRepository : BaseFDURepository() {
     suspend fun getPagedCardRecordsPayloadAndPageNum(dayNum: Int): Pair<Map<String, String>, Int> = withContext(Dispatchers.IO) {
         suspendCancellableCoroutine {
             require(dayNum >= 0) { "Day number should not be less than 0." }
-            val consumeCsrfPageResponse = client.newCall(Request.Builder().get().url(_CONSUME_DETAIL_CSRF_URL).build()).execute()
+            val consumeCsrfPageResponse = client.newCall(Request.Builder().get().url(CONSUME_DETAIL_CSRF_URL).build()).execute()
             val consumeCsrfPageSoup = consumeCsrfPageResponse.body?.string()?.let { it1 -> Jsoup.parse(it1) }
             val metas = consumeCsrfPageSoup?.getElementsByTag("meta")
-            val element = metas?.find { it.attr("name") == "_csrf" }
+            val element = metas?.find { e -> e.attr("name") == "_csrf" }
             val csrfId = requireNotNull(element?.attr("content")) { "CSRF id is null." }
 
             // Build the request body.
@@ -107,12 +107,24 @@ class ECardRepository : BaseFDURepository() {
             if (dayNum > 0) {
                 val detailResponse = client.newCall(Request.Builder()
                     .post(FormBody.Builder().addMap(payload).build())
-                    .url(_CONSUME_DETAIL_URL)
-                    .headers(_CONSUME_DETAIL_HEADER.toHeaders())
+                    .url(CONSUME_DETAIL_URL)
+                    .headers(CONSUME_DETAIL_HEADER.toHeaders())
                     .build()).execute()
                 totalPages = detailResponse.body?.string()?.between("</b>/", "页")?.toIntOrNull() ?: 0
             }
             it.resume(payload to totalPages)
+        }
+    }
+
+    suspend fun getQRCode(): String = withContext(Dispatchers.IO) {
+        suspendCancellableCoroutine {
+            val response = client.newCall(Request.Builder()
+                .get()
+                .url(QR_URL)
+                .build()).execute()
+            val soup = Jsoup.parse(requireNotNull(response.body?.string()) { "Get null response from server." })
+            val result = soup.selectFirst("#myText")?.attr("value")
+            it.resume(requireNotNull(result) { "Cannot find `value` in the response page." })
         }
     }
 
@@ -121,8 +133,8 @@ class ECardRepository : BaseFDURepository() {
         requestData["pageNo"] = pageIndex.toString()
         val detailResponse = client.newCall(Request.Builder()
             .post(FormBody.Builder().addMap(requestData).build())
-            .url(_CONSUME_DETAIL_URL)
-            .headers(_CONSUME_DETAIL_HEADER.toHeaders())
+            .url(CONSUME_DETAIL_URL)
+            .headers(CONSUME_DETAIL_HEADER.toHeaders())
             .build()).execute()
         val soup = detailResponse.body?.string()?.between("<![CDATA[", "]]>")?.let { Jsoup.parse(it) }
         val elements = soup?.selectFirst("tbody")?.getElementsByTag("tr")

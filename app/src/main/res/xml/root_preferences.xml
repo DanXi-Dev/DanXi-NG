@@ -21,6 +21,7 @@
     </PreferenceCategory>
     <PreferenceCategory app:title="杂项">
         <Preference
+            app:icon="@drawable/ic_baseline_android_24"
             app:key="about"
             app:title="关于此应用" />
     </PreferenceCategory>

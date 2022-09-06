@@ -29,9 +29,13 @@ class ECardRepositoryUnitTest : KoinTest {
                 }
             )
         }
+
+        // Insert your login credentials for testing here.
         get<GlobalState>().person = PersonInfo("", "", "")
+
         val repo = get<ECardRepository>()
-        assert(repo.getCardPersonInfo().name == "")
+        assert(repo.getCardPersonInfo().name.isNotEmpty())
         assert(repo.getCardRecords(0).isNotEmpty())
+        assert(repo.getQRCode().isNotEmpty())
     }
 }

@@ -2,10 +2,7 @@ package com.fduhole.danxinative.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fduhole.danxinative.base.feature.FudanAAONoticesFeature
-import com.fduhole.danxinative.base.feature.FudanDailyFeature
-import com.fduhole.danxinative.base.feature.FudanECardFeature
-import com.fduhole.danxinative.base.feature.FudanLibraryAttendanceFeature
+import com.fduhole.danxinative.base.feature.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,7 +17,8 @@ class HomeViewModel : ViewModel() {
             FudanDailyFeature(),
             FudanAAONoticesFeature(),
             FudanLibraryAttendanceFeature(),
-            FudanECardFeature()
+            FudanECardFeature(),
+            FudanQRCodeFeature()
         )))
     }
 
