@@ -1,10 +1,10 @@
 package com.fduhole.danxinative.util
 
+import io.ktor.http.ParametersBuilder
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toJavaLocalDateTime
 import kotlinx.datetime.toLocalDateTime
-import okhttp3.FormBody
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
@@ -23,14 +23,10 @@ fun String.between(start: String, end: String, headGreedy: Boolean = true): Stri
     }
 }
 
-fun FormBody.Builder.addMap(map: Map<String, String>, alreadyEncoded: Boolean = false): FormBody.Builder {
+fun ParametersBuilder.appendAll(map: Map<String, String>) {
     for (entry in map) {
-        if (alreadyEncoded)
-            addEncoded(entry.key, entry.value)
-        else
-            add(entry.key, entry.value)
+        append(entry.key, entry.value)
     }
-    return this
 }
 
 fun Instant.toDateTimeString(formatter: DateTimeFormatter): String =

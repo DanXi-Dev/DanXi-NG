@@ -1,13 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.DanXiNative" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
 
-        <item name="aboutPageHeaderBackground">?attr/colorPrimary</item>
-        <item name="aboutPageHeaderTextColor">?attr/colorOnPrimary</item>
-        <item name="aboutPageHeaderContentScrim">?attr/colorPrimaryDark</item>
-    </style>
-
-    <style name="Theme.DanXiNative" parent="Base.Theme.DanXiNative" />
+    <style name="Theme.DanXiNative" parent="android:Theme.Material.Light.NoActionBar" />
 
 </resources>

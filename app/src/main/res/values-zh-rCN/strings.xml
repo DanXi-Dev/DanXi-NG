@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">旦夕</string>
     <string name="id">ID</string>
-    <string name="login_title">登录</string>
+    <string name="login">登录</string>
     <string name="login_subtitle">使用学校身份信息登录旦夕</string>
     <string name="logging_in">登录中</string>
     <string name="weak_password_note">服务器错误，认为您所输入的是弱密码。请重试数次，或修改密码后再登录。</string>
@@ -12,9 +12,8 @@
     <string name="id_non_empty">ID 不能为空</string>
     <string name="password_non_empty">密码不能为空</string>
     <string name="action_settings">设置</string>
-    <string name="lorem_ipsum">[...]</string>
     <string name="home">主页</string>
-    <string name="prompt_password">密码</string>
+    <string name="password">密码</string>
     <string name="action_sign_in">登陆或注册新账号</string>
     <string name="action_sign_in_short">登陆</string>
     <string name="invalid_username">用户名格式不正确</string>
@@ -28,4 +27,28 @@
     <string name="app_description_title">简介</string>
     <string name="developers">开发者</string>
     <string name="license">开源软件许可协议</string>
+    <string name="about">关于</string>
+    <string name="cancel">取消</string>
+    <string name="login_uis_pwd">密码</string>
+    <string name="login_uis_uid">学号</string>
+    <string name="login_uis">复旦 UIS 登录</string>
+    <string name="dashboard">主页</string>
+    <string name="timetable">日程</string>
+    <string name="fduhole">树洞</string>
+    <string name="course">课评</string>
+    <string name="version">版本</string>
+    <string name="tap_to_view">点击以查看</string>
+    <string name="failed_to_load">加载失败</string>
+    <string name="fudan_aao_notices">教务处通知</string>
+    <string name="fudan_ecard_balance">校园卡余额</string>
+    <string name="fudan_library_attendance">图书馆人数</string>
+    <string name="fudan_qr_code">复旦生活码</string>
+    <string name="ok">好</string>
+    <string name="loading_qr_code">正在加载复活码…\n可能需要 5~15 秒，这取决于复旦服务器。</string>
+    <string name="retry">重试</string>
+    <string name="loading">加载中…</string>
+    <string name="language">语言</string>
+    <string name="theme">主题</string>
+    <string name="accept">接受</string>
+    <string name="deny">拒绝</string>
 </resources>

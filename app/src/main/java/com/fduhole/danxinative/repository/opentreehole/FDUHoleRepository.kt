@@ -5,37 +5,41 @@ package com.fduhole.danxinative.repository.opentreehole
 import com.fduhole.danxinative.model.opentreehole.OTJWTToken
 import com.fduhole.danxinative.model.opentreehole.OTLoginInfo
 import com.fduhole.danxinative.repository.BaseRepository
-import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import com.fduhole.danxinative.state.GlobalState
+import de.jensklingenberg.ktorfit.Ktorfit
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
-import okhttp3.MediaType.Companion.toMediaType
-import retrofit2.Retrofit
+import javax.inject.Inject
 
 // Configure the JSON (de)serializer to match APIs' need better.
-private val json = Json {
+private val jsonConfig = Json {
     // Do not throw an exception when deserializing an object with unknown keys.
     ignoreUnknownKeys = true
     // Do not encode a field into the final json string if it is null.
     explicitNulls = false
 }
 
-class FDUHoleRepository : BaseRepository() {
+class FDUHoleRepository @Inject constructor(
+    globalState: GlobalState
+) : BaseRepository(globalState) {
     companion object {
         const val BASE_URL = "https://hole.hath.top/api/"
         const val BASE_AUTH_URL = "https://testauth.hath.top/api/"
     }
 
-    private val retrofit: Retrofit by lazy {
-        Retrofit.Builder().baseUrl(BASE_AUTH_URL)
-            .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
-            .client(client).build()
-    }
-    private val authApiService: FDUHoleAuthApiService by lazy {
-        retrofit.create(FDUHoleAuthApiService::class.java)
+    private val authApiService: FDUHoleAuthApiService =
+        Ktorfit.Builder().httpClient(client).baseUrl(BASE_AUTH_URL).build().create()
+
+    override fun createClient() = createTmpClient {
+        install(ContentNegotiation) {
+            json(jsonConfig)
+        }
     }
 
 
-    override fun getScopeId(): String = "fduhole.com"
+    override val scopeId = "fduhole.com"
 
     suspend fun login(email: String, password: String): OTJWTToken = authApiService.login(OTLoginInfo(password, email))
 }

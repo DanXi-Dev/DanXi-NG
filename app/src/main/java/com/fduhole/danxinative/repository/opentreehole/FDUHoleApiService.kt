@@ -1,7 +1,15 @@
 package com.fduhole.danxinative.repository.opentreehole
 
-import com.fduhole.danxinative.model.opentreehole.*
-import retrofit2.http.*
+import com.fduhole.danxinative.model.opentreehole.OTDivision
+import com.fduhole.danxinative.model.opentreehole.OTFloor
+import com.fduhole.danxinative.model.opentreehole.OTHole
+import com.fduhole.danxinative.model.opentreehole.OTNewHole
+import com.fduhole.danxinative.model.opentreehole.OTTag
+import de.jensklingenberg.ktorfit.http.Body
+import de.jensklingenberg.ktorfit.http.GET
+import de.jensklingenberg.ktorfit.http.POST
+import de.jensklingenberg.ktorfit.http.Path
+import de.jensklingenberg.ktorfit.http.Query
 
 
 interface FDUHoleApiService {
@@ -9,22 +17,26 @@ interface FDUHoleApiService {
     @GET("divisions")
     suspend fun getDivisions(): List<OTDivision>
 
-    @PUT("divisions/{id}")
-    suspend fun getDivision(@Path("id") id: Int?): OTDivision
 
     @GET("divisions/{division_id}/holes")
     suspend fun getHoles(
-        @Path("division_id") divisionId: Int, @Query("offset") offsetOrId: String?, @Query("size") size: Int?,
+        @Path("division_id") divisionId: Int,
+        @Query("offset") offsetOrId: String?,
+        @Query("size") size: Int?,
     ): List<OTHole>
 
     @GET("holes/{id}")
     suspend fun getHole(
-        @Path("id") holdId: Int,
+        @Path("id") holeId: Int,
     ): OTHole
 
     @GET("holes/{hole_id}/floors")
     suspend fun getFloors(
-        @Path("hole_id") holeId: Int, @Query("offset") offset: Int?, @Query("order_by") orderBy: String?, @Query("size") size: Int?, @Query("sort") sort: String?,
+        @Path("hole_id") holeId: Int,
+        @Query("offset") offset: Int?,
+        @Query("order_by") orderBy: String?,
+        @Query("size") size: Int?,
+        @Query("sort") sort: String?,
     ): List<OTFloor>
 
     @GET("floors/{id}")

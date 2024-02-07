@@ -1,46 +1,40 @@
 package com.fduhole.danxinative
 
-import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.WindowCompat
-import androidx.navigation.NavController
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupWithNavController
-import com.fduhole.danxinative.databinding.ActivityMainBinding
-import com.fduhole.danxinative.state.GlobalState
-import org.koin.android.ext.android.inject
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.fduhole.danxinative.ui.DanXiNavGraph
+import com.fduhole.danxinative.ui.GlobalViewModel
+import com.fduhole.danxinative.ui.theme.DanXiNativeTheme
+import dagger.hilt.android.AndroidEntryPoint
 
-class MainActivity : AppCompatActivity() {
-    private val globalState: GlobalState by inject()
-    private lateinit var appBarConfiguration: AppBarConfiguration
-    private val binding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(LayoutInflater.from(this)) }
-    private val navController: NavController by lazy {
-        val fragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_content_main) as NavHostFragment
-        fragment.navController
-    }
+@AndroidEntryPoint
+class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
-        setContentView(binding.root)
-        setSupportActionBar(binding.toolbar)
-        binding.actMainBottomNavigation.setupWithNavController(navController)
-
-        jumpIfNotLogin()
-    }
-
-    private fun jumpIfNotLogin() {
-        if (globalState.person == null) {
-            startActivity(Intent(this, LoginActivity::class.java))
+        setContent {
+            MainApp()
         }
     }
+}
 
-    override fun onSupportNavigateUp(): Boolean {
-        return navController.navigateUp(appBarConfiguration)
-                || super.onSupportNavigateUp()
+@Composable
+fun MainApp() {
+    val globalViewModel: GlobalViewModel = viewModel()
+    val uiState = globalViewModel.uiState.collectAsStateWithLifecycle()
+    val isDarkTheme = uiState.value.isDarkTheme ?: isSystemInDarkTheme()
+    DanXiNativeTheme(isDarkTheme) {
+        Surface(color = MaterialTheme.colorScheme.background) {
+            DanXiNavGraph(
+                globalViewModel = globalViewModel,
+            )
+        }
     }
 }

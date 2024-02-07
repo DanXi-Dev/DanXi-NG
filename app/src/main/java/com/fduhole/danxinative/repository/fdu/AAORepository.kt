@@ -1,49 +1,39 @@
 package com.fduhole.danxinative.repository.fdu
 
-import com.fduhole.danxinative.model.AAONotice
+import com.fduhole.danxinative.model.fdu.AAONotice
+import com.fduhole.danxinative.state.GlobalState
+import io.ktor.client.call.body
+import io.ktor.http.Url
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlinx.coroutines.withContext
-import okhttp3.Request
-import okhttp3.Response
 import org.jsoup.Jsoup
-import org.jsoup.select.Elements
-import kotlin.coroutines.resume
+import javax.inject.Inject
 
-class AAORepository : BaseFDURepository() {
+class AAORepository @Inject constructor(
+    globalState: GlobalState,
+) : BaseFDURepository(globalState) {
     companion object {
         const val TYPE_NOTICE_ANNOUNCEMENT = "9397"
+        private val LOGIN_URL =
+            Url("https://uis.fudan.edu.cn/authserver/login?service=http%3A%2F%2Fjwc.fudan.edu.cn%2Feb%2Fb7%2Fc9397a388023%2Fpage.psp")
         private const val HOST = "https://jwc.fudan.edu.cn"
     }
 
-    override fun getUISLoginURL(): String =
-        "https://uis.fudan.edu.cn/authserver/login?service=http%3A%2F%2Fjwc.fudan.edu.cn%2Feb%2Fb7%2Fc9397a388023%2Fpage.psp";
+    override fun getUISLoginUrl() = LOGIN_URL
 
-    override fun getScopeId(): String = "fudan.edu.cn"
+    override val scopeId = "fudan.edu.cn"
 
-    fun getNoticeListUrl(type: String, page: Int): String =
-        "$HOST/$type/list${if (page <= 1) "" else page}.htm"
+    private fun getNoticeListUrl(type: String, page: Int): String = "$HOST/$type/list${if (page <= 1) "" else page}.htm"
 
-    suspend fun getNoticeList(page: Int, type: String = TYPE_NOTICE_ANNOUNCEMENT): List<AAONotice> =
-        withContext(Dispatchers.IO) {
-            suspendCancellableCoroutine {
-                val res: Response = client.newCall(
-                    Request.Builder()
-                        .url(getNoticeListUrl(type, page)).get()
-                        .build()
-                ).execute()
-                val doc = Jsoup.parse(res.body!!.string())
-                val noticeList = ArrayList<AAONotice>()
-                for (element in doc.select(".wp_article_list_table > tbody > tr > td > table > tbody")) {
-                    val noticeInfo: Elements = element.select("tr").select("td")
-                    val notice = AAONotice(
-                        noticeInfo[0].text().trim(),
-                        HOST + noticeInfo[0].select("a").attr("href"),
-                        noticeInfo[1].text().trim()
-                    )
-                    noticeList.add(notice)
-                }
-                it.resume(noticeList)
-            }
+    suspend fun getNoticeList(page: Int, type: String = TYPE_NOTICE_ANNOUNCEMENT): List<AAONotice> = with(Dispatchers.IO) {
+        val res: String = client.getUIS(getNoticeListUrl(type, page)).body()
+        val doc = Jsoup.parse(res)
+        doc.select(".wp_article_list_table > tbody > tr > td > table > tbody").map {
+            val noticeInfo = it.select("tr").select("td")
+            AAONotice(
+                title = noticeInfo[0].text().trim(),
+                url = HOST + noticeInfo[0].select("a").attr("href"),
+                time = noticeInfo[1].text().trim()
+            )
         }
+    }
 }

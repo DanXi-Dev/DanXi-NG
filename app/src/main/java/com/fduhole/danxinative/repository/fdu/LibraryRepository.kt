@@ -1,37 +1,47 @@
 package com.fduhole.danxinative.repository.fdu
 
+import com.fduhole.danxinative.model.fdu.LibraryInfo
 import com.fduhole.danxinative.repository.BaseRepository
+import com.fduhole.danxinative.state.GlobalState
+import io.ktor.client.call.body
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.request.post
+import io.ktor.http.Url
+import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
-import okhttp3.Request
-import okhttp3.Response
-import kotlin.coroutines.resume
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
+import javax.inject.Inject
 
-class LibraryRepository : BaseRepository() {
+class LibraryRepository @Inject constructor(
+    globalState: GlobalState,
+) : BaseRepository(globalState) {
     companion object {
-        const val GET_INFO_URL = "http://10.55.101.62/book/show"
+        private val INFO_URL = Url("https://mlibrary.fudan.edu.cn/api/common/h5/getspaceseat")
     }
 
-    override fun getScopeId(): String = "10.55.101.62"
+    override val scopeId = "mlibrary.fudan.edu.cn"
 
-    /**
-     * @return a list whose size is 6.
-     *         The sequence is 文科馆、理科馆、医科馆1-6层、张江馆、江湾馆、医科馆B1
-     */
-    suspend fun getAttendanceList(): List<Int> =
-        withContext(Dispatchers.IO) {
-            suspendCancellableCoroutine {
-                val res: Response = client.newCall(
-                    Request.Builder()
-                        .url(GET_INFO_URL).get()
-                        .build()
-                ).execute()
-                val regex = "(?<=当前在馆人数：)[0-9]+".toRegex()
-                val attendanceList = regex.findAll(res.body!!.string())
-                    .map { elem -> elem.value.toIntOrNull()?: 0 }
-                    .toList()
-                it.resume(attendanceList)
-            }
+    @Serializable
+    private data class AttendanceResponse(
+        val msg: String,
+        val code: String,
+        val data: List<LibraryInfo>,
+    )
+
+    @OptIn(ExperimentalSerializationApi::class)
+    override fun createClient() = createTmpClient {
+        install(ContentNegotiation) {
+            json(Json {
+                ignoreUnknownKeys = true
+                explicitNulls = false
+            })
         }
+    }
+
+    suspend fun getAttendance(): List<LibraryInfo> = withContext(Dispatchers.IO) {
+        client.post(INFO_URL).body<AttendanceResponse>().data
+    }
 }
