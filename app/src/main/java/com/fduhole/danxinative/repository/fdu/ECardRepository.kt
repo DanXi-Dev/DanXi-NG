@@ -2,7 +2,7 @@ package com.fduhole.danxinative.repository.fdu
 
 import com.fduhole.danxinative.model.fdu.CardPersonInfo
 import com.fduhole.danxinative.model.fdu.CardRecord
-import com.fduhole.danxinative.state.GlobalState
+import com.fduhole.danxinative.repository.settings.SettingsRepository
 import com.fduhole.danxinative.util.appendAll
 import com.fduhole.danxinative.util.between
 import com.fduhole.danxinative.util.toDateTimeString
@@ -24,8 +24,8 @@ import kotlin.time.Duration.Companion.days
 
 @Singleton
 class ECardRepository @Inject constructor(
-    globalState: GlobalState,
-) : BaseFDURepository(globalState) {
+    settingsRepository: SettingsRepository
+) : BaseFDURepository(settingsRepository) {
     override fun getUISLoginUrl() = LOGIN_URL
     override val scopeId: String = "fudan.edu.cn"
 

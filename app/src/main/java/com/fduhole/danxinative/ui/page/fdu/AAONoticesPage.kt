@@ -5,10 +5,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.fduhole.danxinative.R
 import com.fduhole.danxinative.model.fdu.AAONotice
@@ -46,13 +48,14 @@ fun AAONoticeItem(
     navController: NavController,
 ) {
     val webViewModel: WebViewModel = hiltViewModel()
+    val uisInfo by webViewModel.uisInfo.collectAsStateWithLifecycle()
     ListItem(
         headlineContent = { Text(notice.title) },
         supportingContent = { Text(notice.time) },
         modifier = Modifier.clickable {
             webViewModel.apply {
                 url = notice.url
-                javascript = uisLoginJavaScript(globalState.fduUISInfo.value)
+                javascript = uisInfo?.let { uisLoginJavaScript(it) }
                 feature = "https://uis.fudan.edu.cn/authserver/login"
             }
             navController.navigate(DanXiDestinations.WEB_VIEW)

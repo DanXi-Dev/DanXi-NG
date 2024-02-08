@@ -12,12 +12,12 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.fduhole.danxinative.ui.FDUUISViewState
-import com.fduhole.danxinative.util.LoginState
+import com.fduhole.danxinative.model.fdu.UISInfo
+import com.fduhole.danxinative.util.LoginStatus
 
 @Composable
 fun FDUUISLoginItem(
-    fduState: LoginState<out FDUUISViewState>,
+    fduState: LoginStatus<out UISInfo>,
     showFDUUISLoginDialog: () -> Unit,
 ) {
     ListItem(
@@ -26,19 +26,19 @@ fun FDUUISLoginItem(
         },
         supportingContent = {
             when (fduState) {
-                is LoginState.Error -> {
+                is LoginStatus.Error -> {
                     Text("登录失败")
                 }
 
-                LoginState.Loading -> {
+                LoginStatus.Loading -> {
                     Text("登录中")
                 }
 
-                LoginState.NotLogin -> {
+                LoginStatus.NotLogin -> {
                     Text("未登录")
                 }
 
-                is LoginState.Success -> {
+                is LoginStatus.Success -> {
                     val name = fduState.data.name
                     val id = fduState.data.id
                     Text("已登录 - $name($id)")
@@ -50,19 +50,19 @@ fun FDUUISLoginItem(
         },
         trailingContent = {
             when (fduState) {
-                is LoginState.Error -> {
+                is LoginStatus.Error -> {
                     Icon(Icons.Filled.Error, contentDescription = "复旦 UIS 账号 - 登录失败")
                 }
 
-                LoginState.Loading -> {
+                LoginStatus.Loading -> {
                     CircularProgressIndicator()
                 }
 
-                LoginState.NotLogin -> {
+                LoginStatus.NotLogin -> {
                     Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "复旦 UIS 账号 - 登录")
                 }
 
-                is LoginState.Success -> {
+                is LoginStatus.Success -> {
                     Icon(Icons.Filled.Check, contentDescription = "复旦 UIS 账号 - 登录成功")
                 }
             }

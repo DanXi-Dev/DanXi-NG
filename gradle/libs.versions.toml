@@ -7,6 +7,7 @@ kotlin = "1.9.22"
 android-gradle-plugin = "8.2.2"
 
 # Androidx
+androidx-appcompat = "1.6.1"
 androidx-compose-bom = "2024.01.00"
 androidx-security = "1.1.0-alpha06"
 androidx-core = "1.12.0"
@@ -112,6 +113,7 @@ google-accompanist-permissions = { module = "com.google.accompanist:accompanist-
 google-zxing-core = { module = "com.google.zxing:core", version.ref = "google-zxing" }
 google-errorprone-annotations = { module = "com.google.errorprone:error_prone_annotations", version.ref = "google-errorprone-annotations" }
 slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "slf4j" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }
 
 
 [plugins]

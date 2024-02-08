@@ -13,29 +13,29 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.fduhole.danxinative.ui.FDUHoleViewState
-import com.fduhole.danxinative.util.LoginState
+import com.fduhole.danxinative.util.LoginStatus
 
 @Composable
-fun FDUHoleLoginItem(fduHoleState: LoginState<out FDUHoleViewState>) {
+fun FDUHoleLoginItem(fduHoleState: LoginStatus<out FDUHoleViewState>) {
     ListItem(
         headlineContent = {
             Text("FDUHole 账号")
         },
         supportingContent = {
             when (fduHoleState) {
-                is LoginState.Error -> {
+                is LoginStatus.Error -> {
                     Text("登录失败")
                 }
 
-                LoginState.Loading -> {
+                LoginStatus.Loading -> {
                     Text("登录中")
                 }
 
-                LoginState.NotLogin -> {
+                LoginStatus.NotLogin -> {
                     Text("未登录")
                 }
 
-                is LoginState.Success -> {
+                is LoginStatus.Success -> {
                     val id = fduHoleState.data.id
                     Text("登录成功, id: $id")
                 }
@@ -46,19 +46,19 @@ fun FDUHoleLoginItem(fduHoleState: LoginState<out FDUHoleViewState>) {
         },
         trailingContent = {
             when (fduHoleState) {
-                is LoginState.Error -> {
+                is LoginStatus.Error -> {
                     Icon(Icons.Filled.Error, contentDescription = "FDUHole 账号 登录失败")
                 }
 
-                LoginState.Loading -> {
+                LoginStatus.Loading -> {
                     CircularProgressIndicator()
                 }
 
-                LoginState.NotLogin -> {
+                LoginStatus.NotLogin -> {
                     Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "FDUHole 账号 登录")
                 }
 
-                is LoginState.Success -> {
+                is LoginStatus.Success -> {
                     Icon(Icons.Filled.Check, contentDescription = "FDUHole 账号 登录成功")
                 }
             }

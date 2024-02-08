@@ -10,7 +10,7 @@ import com.fduhole.danxinative.ui.page.DashboardSubpage
 import com.fduhole.danxinative.ui.page.MainPage
 import com.fduhole.danxinative.ui.page.SettingsSubpage
 import com.fduhole.danxinative.ui.page.TimetableSubpage
-import com.fduhole.danxinative.util.LoginState
+import com.fduhole.danxinative.util.LoginStatus
 
 @Composable
 fun MainScreen(
@@ -20,17 +20,17 @@ fun MainScreen(
     val fduState by globalViewModel.fudanStateHolder.fduState.collectAsStateWithLifecycle()
     val fduHoleState by globalViewModel.fduHoleState.collectAsStateWithLifecycle()
     val subpages = buildList {
-        if (fduState is LoginState.Success) {
+        if (fduState is LoginStatus.Success) {
             add(DashboardSubpage(
                 navController = navController,
                 globalViewModel = globalViewModel,
             ))
         }
-        if (fduHoleState is LoginState.Success) {
+        if (fduHoleState is LoginStatus.Success) {
             add(FDUHoleSubpage(globalViewModel))
             add(CourseSubpage(globalViewModel))
         }
-        if (fduState is LoginState.Success) {
+        if (fduState is LoginStatus.Success) {
             add(TimetableSubpage(globalViewModel))
         }
         add(

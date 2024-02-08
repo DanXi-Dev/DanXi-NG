@@ -71,4 +71,9 @@
     <string name="theme">Theme</string>
     <string name="accept">Accept</string>
     <string name="deny">Deny</string>
+    <string name="en">English</string>
+    <string name="zh">Simplified Chinese</string>
+    <string name="light">Light</string>
+    <string name="dark">Dark</string>
+    <string name="follow_system">System</string>
 </resources>

@@ -2,7 +2,6 @@ package com.fduhole.danxinative.repository.fdu
 
 import com.fduhole.danxinative.model.fdu.LibraryInfo
 import com.fduhole.danxinative.repository.BaseRepository
-import com.fduhole.danxinative.state.GlobalState
 import io.ktor.client.call.body
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.post
@@ -14,10 +13,10 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
+import javax.inject.Singleton
 
-class LibraryRepository @Inject constructor(
-    globalState: GlobalState,
-) : BaseRepository(globalState) {
+@Singleton
+class LibraryRepository @Inject constructor() : BaseRepository() {
     companion object {
         private val INFO_URL = Url("https://mlibrary.fudan.edu.cn/api/common/h5/getspaceseat")
     }

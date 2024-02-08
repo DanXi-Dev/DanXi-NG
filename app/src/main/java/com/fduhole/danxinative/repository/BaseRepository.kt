@@ -1,6 +1,5 @@
 package com.fduhole.danxinative.repository
 
-import com.fduhole.danxinative.state.GlobalState
 import com.fduhole.danxinative.util.net.MemoryCookiesStorage
 import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
@@ -13,9 +12,7 @@ import io.ktor.client.plugins.cookies.CookiesStorage
 import io.ktor.client.plugins.cookies.HttpCookies
 
 
-abstract class BaseRepository(
-    val globalState: GlobalState
-) {
+abstract class BaseRepository {
     companion object {
         private val clients: MutableMap<String, HttpClient> = mutableMapOf()
         private val cookiesStorages: MutableMap<String, MemoryCookiesStorage> = mutableMapOf()

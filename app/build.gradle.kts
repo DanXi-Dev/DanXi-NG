@@ -44,6 +44,9 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
+    androidResources {
+        generateLocaleConfig = true
+    }
 }
 
 dependencies {
@@ -59,6 +62,7 @@ dependencies {
     implementation(libs.kotlinx.datetime)
 
     // Androidx
+    implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core)
     implementation(libs.androidx.lifecycle.runtime)
     implementation(libs.androidx.lifecycle.runtime.compose)

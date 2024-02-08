@@ -5,7 +5,6 @@ package com.fduhole.danxinative.repository.opentreehole
 import com.fduhole.danxinative.model.opentreehole.OTJWTToken
 import com.fduhole.danxinative.model.opentreehole.OTLoginInfo
 import com.fduhole.danxinative.repository.BaseRepository
-import com.fduhole.danxinative.state.GlobalState
 import de.jensklingenberg.ktorfit.Ktorfit
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
@@ -21,9 +20,7 @@ private val jsonConfig = Json {
     explicitNulls = false
 }
 
-class FDUHoleRepository @Inject constructor(
-    globalState: GlobalState
-) : BaseRepository(globalState) {
+class FDUHoleRepository @Inject constructor() : BaseRepository() {
     companion object {
         const val BASE_URL = "https://hole.hath.top/api/"
         const val BASE_AUTH_URL = "https://testauth.hath.top/api/"

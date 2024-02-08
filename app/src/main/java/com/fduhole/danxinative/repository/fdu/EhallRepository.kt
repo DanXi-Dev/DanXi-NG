@@ -1,6 +1,7 @@
 package com.fduhole.danxinative.repository.fdu
 
-import com.fduhole.danxinative.state.GlobalState
+import com.fduhole.danxinative.model.fdu.EhallStudentInfo
+import com.fduhole.danxinative.repository.settings.SettingsRepository
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.http.Url
@@ -10,12 +11,11 @@ import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton
 
-data class StudentInfo(val name: String, val userTypeName: String, val userDepartment: String)
 
 @Singleton
 class EhallRepository @Inject constructor(
-    globalState: GlobalState,
-) : BaseFDURepository(globalState) {
+    settingsRepository: SettingsRepository
+) : BaseFDURepository(settingsRepository) {
     companion object {
         private val INFO_URL =
             Url("https://ehall.fudan.edu.cn/jsonp/ywtb/info/getUserInfoAndSchoolInfo.json")
@@ -27,13 +27,13 @@ class EhallRepository @Inject constructor(
 
     override val scopeId = "ehall.fudan.edu.cn"
 
-    suspend fun getStudentInfo(id: String, password: String): StudentInfo = withContext(Dispatchers.IO) {
+    suspend fun getStudentInfo(id: String, password: String): EhallStudentInfo = withContext(Dispatchers.IO) {
         // Execute manual logging in.
         // Login and absorb the auth cookie.
         val cookiesStorage = login(id, password, LOGIN_URL)
         val tmpClient = createTmpClient(cookiesStorage)
         val body: String = tmpClient.get(INFO_URL).body()
         val obj = JSONObject(body).getJSONObject("data")
-        StudentInfo(obj.optString("userName"), obj.optString("userTypeName"), obj.optString("userDepartment"))
+        EhallStudentInfo(obj.optString("userName"), obj.optString("userTypeName"), obj.optString("userDepartment"))
     }
 }

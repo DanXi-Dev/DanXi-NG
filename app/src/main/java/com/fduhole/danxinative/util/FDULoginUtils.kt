@@ -1,8 +1,8 @@
 package com.fduhole.danxinative.util
 
-import com.fduhole.danxinative.repository.FDUUISInfo
+import com.fduhole.danxinative.model.fdu.UISInfo
 
-fun uisLoginJavaScript(info: FDUUISInfo): String = """try{
+fun uisLoginJavaScript(info: UISInfo): String = """try{
     document.getElementById('username').value = String.raw`""" +
         info.id +
         """`;

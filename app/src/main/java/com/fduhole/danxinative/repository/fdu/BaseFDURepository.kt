@@ -3,7 +3,7 @@ package com.fduhole.danxinative.repository.fdu
 import androidx.annotation.StringRes
 import com.fduhole.danxinative.R
 import com.fduhole.danxinative.repository.BaseRepository
-import com.fduhole.danxinative.state.GlobalState
+import com.fduhole.danxinative.repository.settings.SettingsRepository
 import com.fduhole.danxinative.util.net.MemoryCookiesStorage
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -26,8 +26,8 @@ import kotlinx.coroutines.sync.withLock
 import org.jsoup.Jsoup
 
 abstract class BaseFDURepository(
-    globalState: GlobalState,
-) : BaseRepository(globalState) {
+    val settingsRepository: SettingsRepository,
+) : BaseRepository() {
 
     abstract fun getUISLoginUrl(): Url
 
@@ -157,7 +157,7 @@ abstract class BaseFDURepository(
                 return response
             if (response.request.url.host.contains(UIS_HOST)) {
                 uisLoginMutex.withLock {
-                    val uisInfo = globalState.fduUISInfo.value
+                    val uisInfo = settingsRepository.uisInfo.get() ?: throw UISLoginException.Unknown
                     cookiesStorage.replaceBy(
                         login(
                             id = uisInfo.id,

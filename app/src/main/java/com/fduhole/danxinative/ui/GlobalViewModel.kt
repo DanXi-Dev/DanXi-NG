@@ -7,22 +7,21 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fduhole.danxinative.model.opentreehole.OTJWTToken
-import com.fduhole.danxinative.repository.UserPreferenceRepository
-import com.fduhole.danxinative.repository.fdu.AAORepository
-import com.fduhole.danxinative.repository.fdu.ECardRepository
-import com.fduhole.danxinative.repository.fdu.EhallRepository
-import com.fduhole.danxinative.repository.fdu.LibraryRepository
-import com.fduhole.danxinative.state.GlobalState
+import com.fduhole.danxinative.repository.settings.SettingsRepository
 import com.fduhole.danxinative.ui.component.fdu.FudanStateHolder
-import com.fduhole.danxinative.util.LoginState
+import com.fduhole.danxinative.util.LoginStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class GlobalViewState(
     val isDarkTheme: Boolean? = null,
+    val highContrastColor: Boolean = false,
 )
 
 data class FDUUISViewState(
@@ -38,18 +37,22 @@ data class FDUHoleViewState(
 
 @HiltViewModel
 class GlobalViewModel @Inject constructor(
-    private val userPreferenceRepository: UserPreferenceRepository,
-    private val globalState: GlobalState,
-    private val eCardRepository: ECardRepository,
-    private val ehallRepository: EhallRepository,
-    private val aaoRepository: AAORepository,
-    private val libraryRepository: LibraryRepository,
+    val settingsRepository: SettingsRepository,
     val fudanStateHolder: FudanStateHolder,
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(GlobalViewState())
-    private val _fduHoleState = MutableStateFlow<LoginState<out FDUHoleViewState>>(LoginState.NotLogin)
+    private val _fduHoleState = MutableStateFlow<LoginStatus<out FDUHoleViewState>>(LoginStatus.NotLogin)
 
-    val uiState = _uiState.asStateFlow()
+    val uiState = settingsRepository.run {
+        combine(
+            darkTheme.flow,
+            highContrastColor.flow,
+        ) { darkTheme, highContrastColor ->
+            GlobalViewState(
+                isDarkTheme = darkTheme,
+                highContrastColor = highContrastColor ?: false,
+            )
+        }.stateIn(viewModelScope, SharingStarted.Eagerly, GlobalViewState())
+    }
     val fduHoleState = _fduHoleState.asStateFlow()
 
     var settingsExpanded by mutableStateOf(false)
@@ -63,7 +66,6 @@ class GlobalViewModel @Inject constructor(
     val timeTableScrollState = ScrollState(0)
 
     val stateHolders = listOf(
-        globalState,
         fudanStateHolder,
     )
 
@@ -73,21 +75,11 @@ class GlobalViewModel @Inject constructor(
             it.scope = viewModelScope
             it.start()
         }
-
-        // launch self coroutines
-        viewModelScope.run {
-
-            launch {
-                userPreferenceRepository.isDarkTheme.collect {
-                    _uiState.value = _uiState.value.copy(isDarkTheme = it)
-                }
-            }
-        }
     }
 
     fun setDarkTheme(isDarkTheme: Boolean?) {
         viewModelScope.launch {
-            userPreferenceRepository.setDarkTheme(isDarkTheme)
+            settingsRepository.darkTheme.set(isDarkTheme)
         }
     }
 }

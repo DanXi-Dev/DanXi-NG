@@ -11,11 +11,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -28,11 +26,10 @@ import com.fduhole.danxinative.repository.fdu.BaseFDURepository
 import com.fduhole.danxinative.ui.GlobalViewModel
 import com.fduhole.danxinative.ui.component.settings.AboutCard
 import com.fduhole.danxinative.ui.component.settings.FDUHoleLoginItem
-import com.fduhole.danxinative.ui.component.settings.UISLoginDialog
 import com.fduhole.danxinative.ui.component.settings.FDUUISLoginItem
 import com.fduhole.danxinative.ui.component.settings.SettingsCard
-import com.fduhole.danxinative.ui.component.settings.ThemeBottomSheet
-import com.fduhole.danxinative.util.LoginState
+import com.fduhole.danxinative.ui.component.settings.UISLoginDialog
+import com.fduhole.danxinative.util.LoginStatus
 
 class SettingsSubpage(
     private val navController: NavController,
@@ -48,11 +45,7 @@ class SettingsSubpage(
         val fduState by globalViewModel.fudanStateHolder.fduState.collectAsStateWithLifecycle()
         val fduHoleState by globalViewModel.fduHoleState.collectAsStateWithLifecycle()
 
-        val sheetState = rememberModalBottomSheetState()
-        val scope = rememberCoroutineScope()
-        var showThemeBottomSheet by rememberSaveable { mutableStateOf(false) }
-
-        var showFDUUISLoginDialog by rememberSaveable { mutableStateOf(false) }
+        var showUISLoginDialog by rememberSaveable { mutableStateOf(false) }
 
         Column(
             modifier = Modifier
@@ -61,14 +54,12 @@ class SettingsSubpage(
                 .fillMaxSize(),
         ) {
             ElevatedCard {
-                FDUUISLoginItem(fduState) { showFDUUISLoginDialog = true }
+                FDUUISLoginItem(fduState) { showUISLoginDialog = true }
                 FDUHoleLoginItem(fduHoleState)
             }
             Spacer(modifier = Modifier.padding(8.dp))
             SettingsCard(
-                expanded = globalViewModel.settingsExpanded,
-                onChangeExpanded = { globalViewModel.settingsExpanded = !globalViewModel.settingsExpanded },
-                onShowBottomSheet = { showThemeBottomSheet = true }
+                globalViewModel = globalViewModel,
             )
             Spacer(modifier = Modifier.padding(8.dp))
             AboutCard(
@@ -77,20 +68,9 @@ class SettingsSubpage(
             )
         }
 
-        if (showThemeBottomSheet) {
-            ThemeBottomSheet(
-                onDismissRequest = { showThemeBottomSheet = false },
-                themeSheetState = sheetState,
-                scope = scope,
-                setDarkTheme = { darkTheme ->
-                    globalViewModel.setDarkTheme(darkTheme)
-                },
-            )
-        }
-
-        if (showFDUUISLoginDialog) {
-            val errorMessage = if (fduState is LoginState.Error) {
-                val error = (fduState as LoginState.Error).error
+        if (showUISLoginDialog) {
+            val errorMessage = if (fduState is LoginStatus.Error) {
+                val error = (fduState as LoginStatus.Error).error
                 if (error is BaseFDURepository.Companion.UISLoginException) {
                     stringResource(id = error.id)
                 } else {
@@ -98,11 +78,11 @@ class SettingsSubpage(
                 }
             } else ""
             UISLoginDialog(
-                onDismissRequest = { showFDUUISLoginDialog = false },
+                onDismissRequest = { showUISLoginDialog = false },
                 onLogin = { id, password ->
                     globalViewModel.fudanStateHolder.loginFDUUIS(id, password)
                 },
-                enabled = fduState !is LoginState.Loading,
+                enabled = fduState !is LoginStatus.Loading,
                 errorMessage = errorMessage,
             )
         }

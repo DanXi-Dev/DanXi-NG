@@ -15,21 +15,29 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.ViewModel
-import com.fduhole.danxinative.state.GlobalState
+import androidx.lifecycle.viewModelScope
+import com.fduhole.danxinative.model.fdu.UISInfo
+import com.fduhole.danxinative.repository.settings.SettingsRepository
 import com.fduhole.danxinative.ui.component.RequestSinglePermissionDialog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class WebViewModel @Inject constructor(
-    val globalState: GlobalState
-): ViewModel() {
+    val settingsRepository: SettingsRepository
+) : ViewModel() {
     var url: String? = null
     var javascript: String? = null
     var feature: String? = null
+
+    var uisInfo: StateFlow<UISInfo?> =
+        settingsRepository.uisInfo.flow.stateIn(viewModelScope, SharingStarted.Eagerly, null)
 }
 
 @Composable

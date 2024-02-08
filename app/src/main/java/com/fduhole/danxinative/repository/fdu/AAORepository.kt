@@ -1,16 +1,18 @@
 package com.fduhole.danxinative.repository.fdu
 
 import com.fduhole.danxinative.model.fdu.AAONotice
-import com.fduhole.danxinative.state.GlobalState
+import com.fduhole.danxinative.repository.settings.SettingsRepository
 import io.ktor.client.call.body
 import io.ktor.http.Url
 import kotlinx.coroutines.Dispatchers
 import org.jsoup.Jsoup
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class AAORepository @Inject constructor(
-    globalState: GlobalState,
-) : BaseFDURepository(globalState) {
+    settingsRepository: SettingsRepository,
+) : BaseFDURepository(settingsRepository) {
     companion object {
         const val TYPE_NOTICE_ANNOUNCEMENT = "9397"
         private val LOGIN_URL =
