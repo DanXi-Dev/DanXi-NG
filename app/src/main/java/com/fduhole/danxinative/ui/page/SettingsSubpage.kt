@@ -45,8 +45,8 @@ class SettingsSubpage(
 
     @OptIn(ExperimentalMaterial3Api::class)
     override val body: @Composable BoxScope.() -> Unit = {
-        val fduState = globalViewModel.fudanStateHolder.fduState.collectAsStateWithLifecycle()
-        val fduHoleState = globalViewModel.fduHoleState.collectAsStateWithLifecycle()
+        val fduState by globalViewModel.fudanStateHolder.fduState.collectAsStateWithLifecycle()
+        val fduHoleState by globalViewModel.fduHoleState.collectAsStateWithLifecycle()
 
         val sheetState = rememberModalBottomSheetState()
         val scope = rememberCoroutineScope()
@@ -61,8 +61,8 @@ class SettingsSubpage(
                 .fillMaxSize(),
         ) {
             ElevatedCard {
-                FDUUISLoginItem(fduState.value) { showFDUUISLoginDialog = true }
-                FDUHoleLoginItem(fduHoleState.value)
+                FDUUISLoginItem(fduState) { showFDUUISLoginDialog = true }
+                FDUHoleLoginItem(fduHoleState)
             }
             Spacer(modifier = Modifier.padding(8.dp))
             SettingsCard(
@@ -89,8 +89,8 @@ class SettingsSubpage(
         }
 
         if (showFDUUISLoginDialog) {
-            val errorMessage = if (fduState.value is LoginState.Error) {
-                val error = (fduState.value as LoginState.Error).error
+            val errorMessage = if (fduState is LoginState.Error) {
+                val error = (fduState as LoginState.Error).error
                 if (error is BaseFDURepository.Companion.UISLoginException) {
                     stringResource(id = error.id)
                 } else {
@@ -102,7 +102,7 @@ class SettingsSubpage(
                 onLogin = { id, password ->
                     globalViewModel.fudanStateHolder.loginFDUUIS(id, password)
                 },
-                enabled = fduState.value !is LoginState.Loading,
+                enabled = fduState !is LoginState.Loading,
                 errorMessage = errorMessage,
             )
         }

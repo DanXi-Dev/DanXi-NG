@@ -19,6 +19,7 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -62,7 +63,7 @@ class DashboardSubpage(
             ) {
                 ElevatedCard {
                     featureStateHolders.forEach {
-                        val state = it.uiState.collectAsStateWithLifecycle().value
+                        val state by it.uiState.collectAsStateWithLifecycle()
 
                         // load data on start
                         if (state.state is Feature.Status.Idle && it.shouldLoadData) {
@@ -80,7 +81,7 @@ class DashboardSubpage(
                             Feature.Status.Idle -> stringResource(id = R.string.tap_to_view)
                             Feature.Status.Loading -> stringResource(id = R.string.loading)
                             is Feature.Status.Error -> stringResource(id = R.string.failed_to_load)
-                            is Feature.Status.Success -> state.state.message
+                            is Feature.Status.Success -> (state.state as Feature.Status.Success<Any?>).message
                         }
                         ListItem(
                             headlineContent = { Text(title) },

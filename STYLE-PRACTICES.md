@@ -23,69 +23,37 @@ clean
 
 ## 应用规范
 
-### **要**使用 ViewBinding。
+### **要**使用依赖注入（Dependency Injection）。
 
-ViewBinding 是新版本 Android 开发支持库提供的自动生成类，其名称是布局文件名的驼峰转写。
-
-#### 好👍
-
-```kotlin
-private val binding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(LayoutInflater.from(this)) }
-// 在稍后的地方设置布局
-setContentView(binding.root) 
-```
-
-#### 坏👎
-
-```kotlin
-// 直接设置布局 ID
-setContentView(R.layout.activity_main) 
-```
-
-### **要**使用服务定位器（Service Locator）模式。
-
-旦夕引入了 [Koin](https://insert-koin.io/) 作为全局变量的管理工具，而非 Android 官方提供的 Dagger 或其他依赖注入（Dependency Injection）库，这是因为后者的灵活性很差，仅允许对 Activity、ViewModel 和 Fragment 注入依赖。
+旦夕引入了 [Hilt](https://developer.android.com/training/dependency-injection/hilt-android) 作为 ViewModel 的依赖管理工具，
+因为 Hilt 可以把依赖作用域限制在 `ViewModel` 或者 `Application` 的级别，不同的 `ViewModel` 可以共享不同的全局变量。
+同时 Hilt 是编译时注入，不会影响运行时性能。
 
 #### 好👍
 
 ```kotlin
-// 在 GlobalState.kt 设置全局变量的生成器
-val appModule = module {
+// 使用 Annotation 设置依赖
+@Singleton
+class MyGlobalClass @Inject constructor() {
     // ...
-    single { MyGlobalVariable() }
-}
-// 在导入 KoinComponent 其他地方使用
-private val globalValue: MyGlobalVariable by inject() 
-```
-
-#### 不是很坏，但是不推荐😕
-
-```kotlin
-// 在任何地方都用 KoinComponent 导入全局变量，无论它是哪一层的控件，甚至根本不是控件。
-class MySimpleToolClass : KoinComponent {
-    private val globalValue: MyGlobalVariable by inject()
 }
 
-// ❗在这种时候，应优先让类接受参数，而不是自己硬编码全局变量：
-class MySimpleToolClass(private val globalValue: MyGlobalVariable) {
+// 在其他地方注入依赖
+@ViewModelScoped
+class MyViewModelScopedClass @Inject constructor(
+    myGlobalClass: MyGlobalClass
+) {
+    // ...
 }
-```
 
-#### 坏👎
-
-```kotlin
-// 直接创建全局静态变量
-companion object {
-    var globalValue = MyGlobalValue()
-}
-```
-
-#### 坏👎
-
-```kotlin
-// 储存 Context（如 Application、Activity、Service 等都是 Context）
-companion object {
-    var globalValue: Acitivty = getActivity()
+// 在 `ViewModel` 中注入依赖
+@HiltViewModel
+class MyViewModel @inject constructor(
+    myGlobalClass: MyGlobalClass
+) : ViewModel() {
+    // 获取 Context
+    @ApplicationContext lateinit var context: Context
+    // ...
 }
 ```
 
@@ -140,13 +108,8 @@ suspend fun getDataFromNetwork(): String? {
 #### 好👍
 
 ```kotlin
-suspend fun getDataFromNetwork(): String {
-    withContext(Dispatchers.IO) {
-        suspendCancellableCoroutine {
-            val res = innerCallThatBlocksThread()
-            it.resume(res)
-        }
-    }
+suspend fun getDataFromNetwork() = withContext(Dispatchers.IO){
+    networkRequest()
 }
 ```
 
@@ -154,14 +117,9 @@ suspend fun getDataFromNetwork(): String {
 
 ```kotlin
 fun getDataFromNetwork(): String {
-    val res = innerCallThatBlocksThread()
-    return res
+    return networkRequest()
 }
 ```
-
-> **例外**
->
-> 在网络请求层内的私有方法可以任意决定。实际上，对于总是被网络请求层的其他 suspend 方法调用的方法，建议使用「坏👎」中的写法。
 
 ### **不要**在网络请求层过多地「消化」掉异常。
 
@@ -215,7 +173,7 @@ suspend fun getDataFromNetwork(): String {
 >
 > 除非该异常是**可恢复的**。可恢复的定义是：即便不执行本身的主要逻辑第二次（例如：重新请求网络），也可以返回正确的结果。
 
-### **要**在控制层处理来自数据请求层的异常。
+### **要**在控制层（ `ViewModel` 层）处理来自数据请求层的异常。
 
 #### 好👍
 
@@ -249,6 +207,10 @@ fun clickRefreshData() {
 
 ```kotlin
 // ViewModel 中
+data class MyUiState(
+    val clicked: Boolean = false
+)
+
 private val _uiState = MutableStateFlow(MyUiState())
 val uiState: StateFlow<MyUiState> = _uiState.asStateFlow()
 
@@ -259,22 +221,12 @@ fun onClick() {
 
 // --------------------------------
 
-// Fragment/Activity 中
-data class MyUiState(
-    val clicked: Boolean = false
-)
-
-// 或者对于 Activity，使用 onCreate() 回调
-override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-    super.onViewCreated(view, savedInstanceState)
-    lifecycleScope.launch {
-        repeatOnLifecycle(Lifecycle.State.STARTED) {
-            viewModel.uiState.apply {
-                watch(this@repeatOnLifecycle, { it.clicked }) {
-                    // clicked 变更的事件发生
-                }
-            }
-        }
+// Compose 中
+@Composable
+fun MyComposable(viewModel: MyViewModel) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    Button(onClick = { viewModel.onClick() }) {
+        Text("Click me")
     }
 }
 ```
@@ -285,28 +237,28 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
 ### **不推荐**在视图层以外调用界面方法。
 
-视图层（如 `Activity` 和 `Fragment`）理应承担所有视图任务，如显示动画、显示对话框、显示上下文菜单、跳转到新页面等等。其他层，尤其是 `ViewModel`，不应当执行任何有关方法。
+视图层（如 `Compose`）理应承担所有视图任务，如显示动画、显示对话框、显示上下文菜单、跳转到新页面等等。其他层，尤其是 `ViewModel`，不应当执行任何有关方法。
 
 > **例外**
 >
-> 在自定义的视图-控制器一体类（如 `Feature`）中，`startActivity` 是可容忍的。
+> 在自定义的视图-控制器一体类（如 `Feature`）中，`navigate` 是可容忍的。
 
 ## 应用惯例
 
-### **不要**过多地在通用类中使用只针对复旦 UIS 账号的实现。
+### **要**针对不同账户系统使用不同的数据类型。
 
-旦夕是面向多类型账户系统的，不应想当然地把 `PersonInfo` 视作只包含 UIS 账号密码的数据类型，也不要在设置中过多出现「复旦」有关的字样。
+旦夕是面向多类型账户系统的，`PersonInfo` 是只针对 UIS 账号密码的数据类型。
 
 ```
 # 好👍
+登录复旦 UIS 账户
+使用树洞账号登录旦课
+树洞登录
+无法连接至复旦 UIS 服务器
+
+# 坏👎
 登录账户
 使用旦夕账号登录旦课
 树洞登录
 无法连接至服务器
-
-# 坏👎
-登录 UIS 账户
-使用复旦树洞账号登录旦课
-复旦树洞登录
-无法连接至复旦服务器
 ```

@@ -5,6 +5,7 @@ import androidx.compose.material.icons.filled.CreditCard
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.paging.Pager
@@ -51,11 +52,11 @@ class ECardFeature @Inject constructor(
     }
 
     override val trailingContent: @Composable () -> Unit = {
-        val state = uiState.collectAsStateWithLifecycle().value
+        val state by uiState.collectAsStateWithLifecycle()
         when (state.state) {
             Status.Loading -> CircularProgressIndicator()
             is Status.Success -> {
-                Text("￥${state.state.data.balance}")
+                Text("￥${(state.state as Status.Success<CardPersonInfo>).data.balance}")
             }
 
             else -> {}

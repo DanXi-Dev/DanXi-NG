@@ -7,6 +7,7 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -47,11 +48,12 @@ class LibraryAttendanceFeature @Inject constructor(
         ModalBottomSheet(
             onDismissRequest = { mUIState.update { it.copy(showMoreContent = false) } },
         ) {
-            val state = uiState.collectAsStateWithLifecycle().value
+            val state by uiState.collectAsStateWithLifecycle()
             val supportingText = if (state.state is Status.Success) {
-                state.state.data.fold(StringBuilder()) { builder, info ->
-                    builder.append("${info.campusName}: ${info.inNum}\n")
-                }.toString()
+                (state.state as Status.Success<List<LibraryInfo>>)
+                    .data.fold(StringBuilder()) { builder, info ->
+                        builder.append("${info.campusName}: ${info.inNum}\n")
+                    }.toString()
             } else {
                 ""
             }
