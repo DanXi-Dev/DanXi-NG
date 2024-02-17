@@ -40,6 +40,10 @@ class LibraryRepository @Inject constructor() : BaseRepository() {
         }
     }
 
+    /**
+     * @return a list whose size is 6.
+     *         The sequence is 文科馆、医科馆B1、江湾馆、张江馆、医科馆1-6层、理科馆
+     */
     suspend fun getAttendance(): List<LibraryInfo> = withContext(Dispatchers.IO) {
         client.post(INFO_URL).body<AttendanceResponse>().data
     }

@@ -17,6 +17,7 @@
         android:usesCleartextTraffic="true"
         android:enableOnBackInvokedCallback="true"
         tools:targetApi="tiramisu">
+        <!-- Opt-out the usage statistics collection by Google. -->
         <meta-data
             android:name="android.webkit.WebView.MetricsOptOut"
             android:value="true" />

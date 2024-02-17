@@ -76,4 +76,5 @@
     <string name="light">Light</string>
     <string name="dark">Dark</string>
     <string name="follow_system">System</string>
+    <string name="location_permission_rationale">We request you for the approximate location permission because the current page is calling the Geolocation API to know your approximate location.</string>
 </resources>

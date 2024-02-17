@@ -13,9 +13,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fduhole.danxinative.R
 import com.fduhole.danxinative.model.fdu.UISInfo
 import com.fduhole.danxinative.repository.settings.SettingsRepository
 import com.fduhole.danxinative.ui.component.RequestSinglePermissionDialog
@@ -53,7 +55,7 @@ fun WebViewPage(
     if (showPermissionDialog) {
         RequestSinglePermissionDialog(
             permission = Manifest.permission.ACCESS_COARSE_LOCATION,
-            rationale = "我们向您请求大致位置权限，是因为当前页面正在调用 Geolocation API 来获知您的大致位置。",
+            rationale = stringResource(R.string.location_permission_rationale),
             callback = permissionCallback!!,
             onDismissRequest = { showPermissionDialog = false }
         )
