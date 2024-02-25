@@ -24,12 +24,6 @@ data class GlobalViewState(
     val highContrastColor: Boolean = false,
 )
 
-data class FDUUISViewState(
-    val id: String,
-    val password: String,
-    val name: String,
-)
-
 data class FDUHoleViewState(
     val token: OTJWTToken,
     val id: Int,
@@ -40,7 +34,8 @@ class GlobalViewModel @Inject constructor(
     val settingsRepository: SettingsRepository,
     val fudanStateHolder: FudanStateHolder,
 ) : ViewModel() {
-    private val _fduHoleState = MutableStateFlow<LoginStatus<out FDUHoleViewState>>(LoginStatus.NotLogin)
+    private val _fduHoleState =
+        MutableStateFlow<LoginStatus<out FDUHoleViewState>>(LoginStatus.NotLogin)
 
     val uiState = settingsRepository.run {
         combine(

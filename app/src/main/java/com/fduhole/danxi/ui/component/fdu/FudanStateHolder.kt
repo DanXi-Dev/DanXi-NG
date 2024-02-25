@@ -61,7 +61,7 @@ class FudanStateHolder @Inject constructor(
         // If error exists, do not login
         if (id.isEmpty() || password.isEmpty()) return
 
-        _fduUISState.value = LoginStatus.Loading
+        _fduUISState.update { LoginStatus.Loading }
         scope.launch {
             try {
                 val studentInfo = ehallRepository.getStudentInfo(id, password)

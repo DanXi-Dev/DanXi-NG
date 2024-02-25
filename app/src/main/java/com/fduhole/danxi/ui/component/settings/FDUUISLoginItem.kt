@@ -11,15 +11,24 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import com.fduhole.danxi.model.fdu.UISInfo
+import com.fduhole.danxi.repository.fdu.BaseFDURepository
+import com.fduhole.danxi.ui.component.fdu.FudanStateHolder
 import com.fduhole.danxi.util.LoginStatus
 
 @Composable
 fun FDUUISLoginItem(
     fduState: LoginStatus<out UISInfo>,
-    showFDUUISLoginDialog: () -> Unit,
+    fudanStateHolder: FudanStateHolder,
 ) {
+    var showUISLoginDialog by rememberSaveable { mutableStateOf(false) }
+
     ListItem(
         headlineContent = {
             Text("复旦 UIS 账号")
@@ -68,7 +77,26 @@ fun FDUUISLoginItem(
             }
         },
         modifier = Modifier.clickable {
-            showFDUUISLoginDialog()
+            showUISLoginDialog = true
         },
     )
+
+    if (showUISLoginDialog) {
+        val errorMessage = if (fduState is LoginStatus.Error) {
+            val error = fduState.error
+            if (error is BaseFDURepository.Companion.UISLoginException) {
+                stringResource(id = error.id)
+            } else {
+                error.message ?: ""
+            }
+        } else ""
+        UISLoginDialog(
+            onDismissRequest = { showUISLoginDialog = false },
+            onLogin = { id, password ->
+                fudanStateHolder.loginFDUUIS(id, password)
+            },
+            enabled = fduState !is LoginStatus.Loading,
+            errorMessage = errorMessage,
+        )
+    }
 }

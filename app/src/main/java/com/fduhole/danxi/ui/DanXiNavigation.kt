@@ -1,5 +1,8 @@
 package com.fduhole.danxi.ui
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -9,6 +12,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.fduhole.danxi.ui.page.MainPage
 import com.fduhole.danxi.ui.page.common.WebViewModel
 import com.fduhole.danxi.ui.page.common.WebViewPage
 import com.fduhole.danxi.ui.page.fdu.AAONoticesPage
@@ -34,10 +38,12 @@ fun DanXiNavGraph(
     NavHost(
         navController = navController,
         startDestination = startDestination,
-        modifier = modifier
+        modifier = modifier,
+        enterTransition = { fadeIn(animationSpec = tween(300)) },
+        exitTransition = { fadeOut(animationSpec = tween(300)) },
     ) {
         composable(DanXiDestinations.MAIN) {
-            MainScreen(
+            MainPage(
                 navController = navController,
                 globalViewModel = globalViewModel,
             )
