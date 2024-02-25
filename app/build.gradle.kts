@@ -10,10 +10,10 @@ plugins {
 
 android {
     compileSdk = 34
-    namespace = "com.fduhole.danxinative"
+    namespace = "com.fduhole.danxi"
 
     defaultConfig {
-        applicationId = "com.fduhole.danxinative"
+        applicationId = "com.fduhole.danxi"
         minSdk = 26
         targetSdk = 34
         versionCode = 1

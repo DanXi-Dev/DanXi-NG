@@ -8,16 +8,16 @@ android-gradle-plugin = "8.2.2"
 
 # Androidx
 androidx-appcompat = "1.6.1"
-androidx-compose-bom = "2024.01.00"
+androidx-compose-bom = "2024.02.01"
 androidx-security = "1.1.0-alpha06"
 androidx-core = "1.12.0"
 androidx-lifecycle = "2.7.0"
-androidx-navigation = "2.7.6"
+androidx-navigation = "2.7.7"
 androidx-paging = "3.2.1"
 androidx-annotation = "1.7.1"
 androidx-activity-compose = "1.8.2"
 androidx-datastore = "1.0.0"
-androidx-hilt = "1.1.0"
+androidx-hilt = "1.2.0"
 androidx-junit-ext = "1.1.5"
 androidx-test-espresso = "3.5.1"
 
@@ -39,7 +39,7 @@ slf4j = "2.0.12"
 
 # Compose versions
 compose-compiler = "1.5.8"
-compose-material3 = "1.2.0-rc01"
+compose-material3 = "1.2.0"
 
 # plugin versions
 gradle-versions = "0.51.0"
@@ -62,7 +62,7 @@ androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = 
 androidx-compose-foundation = { module = "androidx.compose.foundation:foundation" }
 androidx-compose-foundation-layout = { module = "androidx.compose.foundation:foundation-layout" }
 androidx-compose-material-iconsExtended = { module = "androidx.compose.material:material-icons-extended" }
-androidx-compose-material3 = { module = "androidx.compose.material3:material3", version.ref = "compose-material3" }
+androidx-compose-material3 = { module = "androidx.compose.material3:material3" }
 androidx-compose-runtime = { module = "androidx.compose.runtime:runtime" }
 androidx-compose-runtime-livedata = { module = "androidx.compose.runtime:runtime-livedata" }
 androidx-compose-ui = { module = "androidx.compose.ui:ui" }
