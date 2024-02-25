@@ -60,6 +60,9 @@ fun MainPage(
 @Composable
 fun MainPageContent(subpages: List<Subpage>) {
     var currentPage by rememberSaveable { mutableIntStateOf(0) }
+    if (currentPage >= subpages.size) {
+        currentPage = 0
+    }
     val selectedSubpage = subpages[currentPage]
     Scaffold(
         topBar = {
