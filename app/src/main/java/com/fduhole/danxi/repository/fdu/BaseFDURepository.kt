@@ -46,10 +46,10 @@ abstract class BaseFDURepository(
         }
 
         private val uisMessageExceptionMap = mapOf(
-            "请输入验证码" to UISLoginException.WeakPassword,
-            "密码有误" to UISLoginException.UnderMaintenance,
-            "弱密码提示" to UISLoginException.NeedCaptcha,
-            "网络维护中 | Under Maintenance" to UISLoginException.InvalidCredentials,
+            "请输入验证码" to UISLoginException.NeedCaptcha,
+            "密码有误" to UISLoginException.InvalidCredentials,
+            "弱密码提示" to UISLoginException.WeakPassword,
+            "网络维护中 | Under Maintenance" to UISLoginException.UnderMaintenance,
         )
 
         suspend fun login(
