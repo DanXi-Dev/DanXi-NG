@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.fduhole.danxinative">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -14,32 +13,19 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/Theme.DanXiNative"
+        android:theme="@style/Theme.DanXi"
         android:usesCleartextTraffic="true"
-        tools:targetApi="s">
-        <activity
-            android:label="关于"
-            android:name=".AboutActivity"
-            android:exported="false"/>
-        <activity
-            android:name=".SingleFragmentActivity"
-            android:exported="false" /> <!-- Opt-out the usage statistics collection by Google. -->
+        android:enableOnBackInvokedCallback="true"
+        tools:targetApi="tiramisu">
+        <!-- Opt-out the usage statistics collection by Google. -->
         <meta-data
             android:name="android.webkit.WebView.MetricsOptOut"
             android:value="true" />
 
         <activity
-            android:name=".BrowserActivity"
-            android:exported="false" />
-        <activity
-            android:name=".LoginActivity"
-            android:exported="false"
-            android:label="@string/title_activity_login"
-            android:theme="@style/Theme.DanXiNative" />
-        <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.DanXiNative">
+            android:theme="@style/Theme.DanXi">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
