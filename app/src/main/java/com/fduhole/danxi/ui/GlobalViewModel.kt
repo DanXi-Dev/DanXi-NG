@@ -59,13 +59,13 @@ class GlobalViewModel @Inject constructor(
     var aboutExpanded by mutableStateOf(false)
 
     // scroll state
-    val settingsScrollState = ScrollState(0)
-    val homeScrollState = ScrollState(0)
+    val dashboardScrollState = ScrollState(0)
     val fduHoleScrollState = ScrollState(0)
-    val danKeScrollState = ScrollState(0)
-    val timeTableScrollState = ScrollState(0)
+    val courseScrollState = ScrollState(0)
+    val timetableScrollState = ScrollState(0)
+    val settingsScrollState = ScrollState(0)
 
-    val stateHolders = listOf(
+    private val stateHolders = listOf(
         fudanStateHolder,
     )
 

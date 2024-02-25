@@ -13,7 +13,7 @@ class CourseSubpage(
 ) : Subpage {
     override val title = R.string.course
     override val icon = Icons.Filled.EggAlt
-    override val scrollState = globalViewModel.danKeScrollState
+    override val scrollState = globalViewModel.courseScrollState
     override val body: @Composable BoxScope.() -> Unit = {}
     override val leading: @Composable () -> Unit = {}
     override val trailing: @Composable RowScope.() -> Unit = {}

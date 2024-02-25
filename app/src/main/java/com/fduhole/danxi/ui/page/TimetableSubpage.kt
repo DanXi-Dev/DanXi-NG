@@ -13,7 +13,7 @@ class TimetableSubpage(
 ) : Subpage {
     override val title = R.string.timetable
     override val icon = Icons.Filled.CalendarToday
-    override val scrollState = globalViewModel.timeTableScrollState
+    override val scrollState = globalViewModel.timetableScrollState
     override val body: @Composable BoxScope.() -> Unit = {}
     override val leading: @Composable () -> Unit = {}
     override val trailing: @Composable RowScope.() -> Unit = {}

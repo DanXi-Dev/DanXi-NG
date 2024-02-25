@@ -21,7 +21,7 @@ class FudanStateHolder @Inject constructor(
     private val settingsRepository: SettingsRepository,
     private val ehallRepository: EhallRepository,
 
-    val fudanECardFeature: ECardFeature,
+    fudanECardFeature: ECardFeature,
     aaoNoticesFeature: AAONoticesFeature,
     libraryAttendanceFeature: LibraryAttendanceFeature,
     qrCodeFeature: QRCodeFeature,

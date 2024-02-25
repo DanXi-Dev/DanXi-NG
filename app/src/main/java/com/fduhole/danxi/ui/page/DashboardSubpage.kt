@@ -41,7 +41,7 @@ class DashboardSubpage(
 ) : Subpage {
     override val title = R.string.dashboard
     override val icon = Icons.Filled.Home
-    override val scrollState = globalViewModel.homeScrollState
+    override val scrollState = globalViewModel.dashboardScrollState
 
     @OptIn(ExperimentalMaterial3Api::class)
     override val body: @Composable BoxScope.() -> Unit = {
